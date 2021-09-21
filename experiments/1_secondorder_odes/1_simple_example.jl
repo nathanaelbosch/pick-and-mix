@@ -7,6 +7,7 @@ using LinearAlgebra
 # using GLMakie
 using CairoMakie
 
+
 DIR = @__DIR__
 
 
@@ -76,13 +77,11 @@ function plot_sol(
 
     d = length(sol.u[1])
     q = sol.interp.q
+    D = d*(q+1)
     if firstorder
-        # means = means[:, 2:d:end]
-        # stds = stds[:, 2:d:end]
-        # discrete_means = discrete_means[:, 2:d:end]
-        means = means[:, d*(q+1)÷2+1:end]
-        stds = stds[:, d*(q+1)÷2+1:end]
-        discrete_means = discrete_means[:, d*(q+1)÷2+1:end]
+        means = means[:, D÷2+1:end]
+        stds = stds[:, D÷2+1:end]
+        discrete_means = discrete_means[:, D÷2+1:end]
     end
 
     true_vals_dense = [true_solution.(times) true_derivative.(times) true_second_derivative.(times)]
@@ -228,4 +227,4 @@ leg = fig[0, :] = Legend(
 rowgap!(fig.layout, 0)
 trim!(fig.layout)
 
-save(joinpath(DIR, "simple_example.pdf"), fig, pt_per_unit=1)
+save(joinpath(DIR, "fig2_secondorder_example.pdf"), fig, pt_per_unit=1)
