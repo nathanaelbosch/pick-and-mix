@@ -156,16 +156,14 @@ theme = Theme(
 set_theme!(theme)
 
 fig = Figure(
-    resolution=(600,200)
-    # resolution = (250, 300),
-    # resolution = (300, 300)
-    # figure_padding = 1,
-    # backgroundcolor = :gray80,
+    resolution = (600, 150),
+    # resolution = (250, 150),
+    figure_padding = 5,
 )
-ax1 = fig[1, 1] = Axis(fig, title="Y⁽⁰⁾")
-ax2 = fig[1, 2] = Axis(fig, title="Y⁽⁰⁾ - y")
-ax3 = fig[1, 3] = Axis(fig, title="Y⁽¹⁾ - ẏ")
-ax4 = fig[1, 4] = Axis(fig, title="Y⁽²⁾ - ÿ")
+ax1 = fig[1, 1] = Axis(fig, title=L"Y^{(0)}", xlabel=L"t")
+ax2 = fig[1, 2] = Axis(fig, title=L"Y^{(0)} - y", xlabel=L"t")
+ax3 = fig[1, 3] = Axis(fig, title=L"Y^{(1)} - \dot{y}", xlabel=L"t")
+ax4 = fig[1, 4] = Axis(fig, title=L"Y^{(2)} - \ddot{y}", xlabel=L"t")
 
 lines!(ax1, 0:0.1:2π, true_solution.(0:0.1:2π), linestyle=:dash, color=:black)
 hlines!(ax2, [0], linestyle=:dash, color=:black)
@@ -176,15 +174,6 @@ hlines!(ax4, [0], linestyle=:dash, color=:black)
 plot_sol(sol1, 1, true)
 plot_sol(sol2, 2, false)
 
-
-ax1.xlabel="t"
-ax2.xlabel="t"
-ax3.xlabel="t"
-ax4.xlabel="t"
-# ax1.ylabel="Y⁽⁰⁾"
-# ax2.ylabel="Y⁽⁰⁾ - y"
-# ax3.ylabel="Y⁽¹⁾ - ẏ"
-# ax4.ylabel="Y⁽²⁾ - ÿ"
 ax1.xticks = ([0, 2π], ["0", "2π"])
 ax2.xticks = ([0, 2π], ["0", "2π"])
 ax3.xticks = ([0, 2π], ["0", "2π"])
