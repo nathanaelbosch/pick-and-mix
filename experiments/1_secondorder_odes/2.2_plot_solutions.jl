@@ -2,6 +2,7 @@
 # Plotting
 using CairoMakie
 using JLD
+using Statistics
 
 include("../theme.jl")
 DIR = @__DIR__
@@ -9,6 +10,12 @@ DIR = @__DIR__
 d = load(joinpath(DIR, "workprecisiondata.jld"))
 wps = d["wps"]
 
+ODE1_o4_times = [w[:time] for w in wps["ODE1;o=4;EK0"]]
+ODE2_o4_times = [w[:time] for w in wps["ODE2;o=4;EK0"]]
+ODE1_o5_times = [w[:time] for w in wps["ODE1;o=5;EK1"]]
+ODE2_o5_times = [w[:time] for w in wps["ODE2;o=5;EK1"]]
+
+@info "runtimes and improvements" ODE1_o4_times ./ ODE2_o4_times mean(ODE1_o4_times ./ ODE2_o4_times) ODE1_o5_times ./ ODE2_o5_times mean(ODE1_o5_times ./ ODE2_o5_times)
 
 using OrdinaryDiffEq
 function pleiades(du,u,p,t)
@@ -51,6 +58,8 @@ fig = Figure(
 ax = fig[1, 1] = Axis(
     fig, title="Solution Trajectories",
     xlabel="x", ylabel="y",
+    xgridvisible=false,
+    ygridvisible=false,
     xticksvisible=false,
     yticksvisible=false,
     xticklabelsvisible=false,
@@ -168,9 +177,7 @@ ax2.yticks = ([1e-2, 1e-6, 1e-10], ["10⁻²", "10⁻⁶", "10⁻¹⁰"])
 
 
 
-# ax3.xticks = ([1e-2, 1e0, 1e2], ["10⁻²", "10⁰", "10²"])
-# ax3.yticks = ([1e0, 1e1, 1e2], ["10⁰", "10¹", "10²"])
-# ax3.yticks = ([1e0, 1e-5, 1e-10], ["10⁰", "10⁻⁵", "10⁻¹⁰"])
+ax3.xticks = ([1e-2, 1e0, 1e2], ["10⁻²", "10⁰", "10²"])
 ax3.yticks = ([1e-2, 1e-6, 1e-10], ["10⁻²", "10⁻⁶", "10⁻¹⁰"])
 # ylims!(ax3, 1e0, 1e3)
 
