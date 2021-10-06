@@ -1,7 +1,6 @@
 ############################################################################################
 # Plotting
 using CairoMakie
-using Plots: RGB
 using JLD
 
 include("../theme.jl")
@@ -9,11 +8,6 @@ DIR = @__DIR__
 
 d = load(joinpath(DIR, "workprecisiondata.jld"))
 wps = d["wps"]
-
-
-COLORS = parse.(
-    RGB, ["#107D79", "#FF9933", "#1F77B4", "#D62728", "#9467BD", "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF"]
-)
 
 
 using OrdinaryDiffEq
