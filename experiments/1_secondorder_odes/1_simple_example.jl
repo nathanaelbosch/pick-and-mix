@@ -60,77 +60,6 @@ true_second_derivative(t) = -A*ω^2*cos(ω*t-ϕ)
 
 
 
-
-
-
-interp(sol, times) = StructArray([
-    sol.interp(t, sol.t, sol.x_filt, sol.x_smooth, sol.diffusions) for t in times])
-function plot_sol(
-    sol, c, firstorder;
-    times = tspan[1]:0.025:tspan[2]
-    )
-
-    x = interp(sol, times)
-    means = stack(x.μ)
-    stds = sqrt.(stack(diag.(x.Σ)))
-    discrete_means = stack(sol.x_smooth.μ)
-
-    d = length(sol.u[1])
-    q = sol.interp.q
-    D = d*(q+1)
-    if firstorder
-        means = means[:, D÷2+1:end]
-        stds = stds[:, D÷2+1:end]
-        discrete_means = discrete_means[:, D÷2+1:end]
-    end
-
-    true_vals_dense = [true_solution.(times) true_derivative.(times) true_second_derivative.(times)]
-    true_vals = [true_solution.(sol.t) true_derivative.(sol.t) true_second_derivative.(sol.t)]
-
-    lines!(
-        fig[1, 1], times, means[:, 1],
-        linewidth=2.5,
-        color=(COLORS[c], 0.7),
-    )
-    scatter!(
-        fig[1, 1], sol.t, discrete_means[:, 1],
-        color=COLORS[c], markercolor=COLORS[c], size=5,
-        markersize=firstorder ? 12 : 8,
-        marker=firstorder ? :circle : :utriangle,
-        strokewidth=0.5,
-    )
-
-    for i in 1:3
-        lines!(
-            fig[1, i+1], times, means[:, i] - true_vals_dense[:, i],
-            color=(COLORS[c],0.7),
-            linewidth=2.5,
-        )
-        scatter!(
-            fig[1, i+1], sol.t, discrete_means[:, i] - true_vals[:, i],
-            color=COLORS[c], markercolor=COLORS[c], size=5,
-            markersize=firstorder ? 10 : 8,
-            marker=firstorder ? :circle : :utriangle,
-            strokewidth=0.5,
-        )
-        band!(fig[1, i+1], times,
-              means[:, i] .- 1.96 .* stds[:, i] - true_vals_dense[:, i],
-              means[:, i] .+ 1.96 .* stds[:, i] - true_vals_dense[:, i],
-              color=(COLORS[c], 0.2))
-    end
-end
-
-
-
-# PN:
-N = 7
-order = 4
-sol1 = solve(prob1, EK1(order=order-1, diffusionmodel=:fixed),
-             adaptive=false, tstops=range(tspan...; length=N))
-sol2 = solve(prob2, EK1(order=order, diffusionmodel=:fixed),
-             adaptive=false, tstops=range(tspan...; length=N))
-
-
 set_theme!()
 theme = Theme(
     fontsize=10,
@@ -171,8 +100,116 @@ hlines!(ax3, [0], linestyle=:dash, color=:black)
 hlines!(ax4, [0], linestyle=:dash, color=:black)
 
 
+
+
+interp(sol, times) = StructArray([
+    sol.interp(t, sol.t, sol.x_filt, sol.x_smooth, sol.diffusions) for t in times])
+function plot_sol(
+    sol, c, firstorder;
+    times = tspan[1]:0.025:tspan[2]
+    )
+
+    x = interp(sol, times)
+    means = stack(x.μ)
+    stds = sqrt.(stack(diag.(x.Σ)))
+    discrete_means = stack(sol.x_smooth.μ)
+
+    d = length(sol.u[1])
+    q = sol.interp.q
+    D = d*(q+1)
+    if firstorder
+        means = means[:, [5, 1, 2, 3]]
+        stds = stds[:, [5, 1, 2, 3]]
+        discrete_means = discrete_means[:, [5, 1, 2, 3]]
+    end
+
+    true_vals_dense = [true_solution.(times) true_derivative.(times) true_second_derivative.(times)]
+    true_vals = [true_solution.(sol.t) true_derivative.(sol.t) true_second_derivative.(sol.t)]
+
+    linealpha = 0.8
+
+    lines!(
+        fig[1, 1], times, means[:, 1],
+        linewidth=2.5,
+        color=(COLORS[c], linealpha),
+    )
+    scatter!(
+        fig[1, 1], sol.t, discrete_means[:, 1],
+        color=COLORS[c], markercolor=COLORS[c], size=5,
+        markersize=firstorder ? 12 : 8,
+        marker=firstorder ? :circle : :utriangle,
+        strokewidth=0.5,
+    )
+
+    for i in 1:3
+        lines!(
+            fig[1, i+1], times, means[:, i] - true_vals_dense[:, i],
+            color=(COLORS[c],linealpha),
+            linewidth=2.5,
+        )
+        scatter!(
+            fig[1, i+1], sol.t, discrete_means[:, i] - true_vals[:, i],
+            color=COLORS[c], markercolor=COLORS[c], size=5,
+            markersize=firstorder ? 10 : 8,
+            marker=firstorder ? :circle : :utriangle,
+            strokewidth=0.5,
+        )
+        band!(fig[1, i+1], times,
+              means[:, i] .- 1.96 .* stds[:, i] - true_vals_dense[:, i],
+              means[:, i] .+ 1.96 .* stds[:, i] - true_vals_dense[:, i],
+              color=(COLORS[c], 0.2))
+    end
+end
+
+
+
+# PN:
+N = 7
+order = 4
+sol1 = solve(prob1, EK1(order=order-1, diffusionmodel=:fixed),
+             adaptive=false, tstops=range(tspan...; length=N))
+sol2 = solve(prob2, EK1(order=order, diffusionmodel=:fixed),
+             adaptive=false, tstops=range(tspan...; length=N))
+
+function plot_samples(sol, c, firstorder; N=5)
+    alpha = 0.6
+    width = 0.5
+
+    means, times = ProbNumDiffEq.dense_sample_states(sol, N)
+
+    d = length(sol.u[1])
+    q = sol.interp.q
+    D = d*(q+1)
+    if firstorder
+        # means = means[:, D÷2+1:end, :]
+        means = means[:, [5, 1, 2, 3], :]
+    end
+
+    true_vals_dense = [true_solution.(times) true_derivative.(times) true_second_derivative.(times)]
+    true_vals = [true_solution.(sol.t) true_derivative.(sol.t) true_second_derivative.(sol.t)]
+
+    for j in 1:N
+        lines!(
+        fig[1, 1], times, means[:, 1, j],
+        linewidth=width,
+        color=(COLORS[c], alpha),
+        )
+
+        for i in 1:3
+            lines!(
+                fig[1, i+1], times, means[:, i, j] - true_vals_dense[:, i],
+                color=(COLORS[c], alpha),
+                linewidth=width,
+            )
+        end
+    end
+end
+
+# plot_samples(sol1, 1, true)
+# plot_samples(sol2, 2, false)
 plot_sol(sol1, 1, true)
 plot_sol(sol2, 2, false)
+
 
 ax1.xticks = ([0, 2π], ["0", "2π"])
 ax2.xticks = ([0, 2π], ["0", "2π"])
@@ -186,10 +223,10 @@ ylims!(ax1, -2.2, 2.2)
 ax1.yticks = [-2, 2]
 ylims!(ax2, -0.03, 0.03)
 ax2.yticks = [-0.02, 0.02]
-ylims!(ax3, -0.05, 0.05)
-ax3.yticks = [-0.04, 0.04]
-ylims!(ax4, -0.25, 0.25)
-ax4.yticks = [-0.2, 0.2]
+ylims!(ax3, -0.04, 0.04)
+ax3.yticks = [-0.03, 0.03]
+ylims!(ax4, -0.12, 0.12)
+ax4.yticks = [-0.1, 0.1]
 
 
 
@@ -214,6 +251,7 @@ leg = fig[0, :] = Legend(
     valign=:bottom,
 )
 rowgap!(fig.layout, 0)
+colgap!(fig.layout, 15)
 trim!(fig.layout)
 
 save(joinpath(DIR, "fig2_secondorder_example.pdf"), fig, pt_per_unit=1)
