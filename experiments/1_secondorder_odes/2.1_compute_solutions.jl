@@ -5,6 +5,7 @@ using Plots: RGB
 using BenchmarkTools
 using DiffEqDevTools
 using LinearAlgebra
+using JLD
 
 
 DIR = @__DIR__
@@ -129,8 +130,8 @@ wps = Dict()
 
 
 
-abstols = 1.0 ./ 10.0 .^ (6:12)
-reltols = 1.0 ./ 10.0 .^ (3:9)
+abstols = 1.0 ./ 10.0 .^ (6:11)
+reltols = 1.0 ./ 10.0 .^ (3:8)
 
 
 wps["Tsit5"] = MyWorkPrecision(prob1, Tsit5(), abstols ./ 10, reltols ./ 10; dense=false)
@@ -163,7 +164,4 @@ wps["ODE2;o=5;EK1"] = MyWorkPrecision(
     abstols, reltols; dense=smooth, save_everystep=false)
 
 
-
-
-using JLD
 save(joinpath(DIR, "workprecisiondata.jld"), "wps", wps)

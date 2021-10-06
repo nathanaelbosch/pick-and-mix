@@ -4,6 +4,7 @@ using CairoMakie
 using Plots: RGB
 using JLD
 
+include("../theme.jl")
 DIR = @__DIR__
 
 d = load(joinpath(DIR, "workprecisiondata.jld"))
@@ -48,40 +49,10 @@ appxsol = solve(remake(prob1, u0=big.(prob1.u0)), Vern9(), abstol=1e-20, reltol=
 
 
 
-set_theme!()
-theme = Theme(
-    fontsize=10,
-    Axis=(
-        xgridvisible=false,
-        ygridvisible=false,
-        topspinevisible=false,
-        rightspinevisible=false,
-        spinewidth=0.7,
-        xtickwidth=0.7,
-        ytickwidth=0.7,
-        xticksize=2,
-        yticksize=2,
-        xticklabelsize=9,
-        yticklabelsize=9,
-    ),
-    Legend=(
-        labelsize=9,
-        framevisible=false,
-    )
-)
-set_theme!(theme)
-
-
-
-
-
-
 fig = Figure(
     # resolution=(600,200)
     resolution=(600,180)
 )
-
-
 
 ax = fig[1, 1] = Axis(
     fig, title="Solution Trajectories",
@@ -190,7 +161,6 @@ leg = fig[:, end+1] = Legend(
     # orientation=:horizontal,
     # tellwidth=false,
     # tellheight=true,
-    patchsize=(10,10),
 )
 
 
@@ -204,7 +174,7 @@ ax2.yticks = ([1e-2, 1e-6, 1e-10], ["10⁻²", "10⁻⁶", "10⁻¹⁰"])
 
 
 
-ax3.xticks = ([1e-2, 1e0, 1e2], ["10⁻²", "10⁰", "10²"])
+# ax3.xticks = ([1e-2, 1e0, 1e2], ["10⁻²", "10⁰", "10²"])
 # ax3.yticks = ([1e0, 1e1, 1e2], ["10⁰", "10¹", "10²"])
 # ax3.yticks = ([1e0, 1e-5, 1e-10], ["10⁰", "10⁻⁵", "10⁻¹⁰"])
 ax3.yticks = ([1e-2, 1e-6, 1e-10], ["10⁻²", "10⁻⁶", "10⁻¹⁰"])
