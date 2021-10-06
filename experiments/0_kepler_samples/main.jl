@@ -55,44 +55,84 @@ g(u) = [H2(u) - H(du0, u0); L2(u) - L(du0, u0)]
 
 
 
-dt = 1//20
-sol1 = solve(prob, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=dt)
+sol1 = solve(prob, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=1//10)
 # sol2 = solve(prob2, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=dt)
-sol2 = solve(prob2, EK1(order=4, diffusionmodel=:fixed), adaptive=false, dt=dt,
+sol2 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=1//2,
              callback=ProbNumDiffEq.ManifoldUpdate(g; save_positions=(false, false)));
 # sol1 = solve(prob, EK1(order=1))
 # sol2 = solve(prob2, EK1(order=2))
+N = 100
+samples1, _ = ProbNumDiffEq.dense_sample(sol1, N)
+samples2, _ = ProbNumDiffEq.dense_sample(sol2, N)
 
-
-Plots.plot(sol1, vars=(1,2))
-Plots.plot!(sol2, vars=(3,4))
 
 
 # Plots.plot(sol1, vars=(1,2), xlims=(0.35, 0.45), ylims=(-0.05, 0.05))
 # Plots.plot!(sol2, vars=(3,4))
 
-
-N = 100
-samples1, _ = ProbNumDiffEq.dense_sample(sol1, N; density=10000)
-# Plots.plot()
+Plots.plot()
 for i in 1:N
     Plots.plot!(samples1[:, 1, i], samples1[:, 2, i], label="", color=1, alpha=0.8, linewidth=0.1)
 end
 Plots.plot!()
 
-samples2, _ = ProbNumDiffEq.dense_sample(sol2, N; density=10000)
 # Plots.plot()
 for i in 1:N
     Plots.plot!(samples2[:, 1, i], samples2[:, 2, i], label="", color=2, alpha=0.8, linewidth=0.1)
 end
 Plots.plot!()
 
-Plots.plot!(xlims=(0.398, 0.402), ylims=(-0.02, 0.01))
-# Plots.plot!(xlims=(0.35, 0.45), ylims=(-0.1, 0.1))
+# Plots.plot!(xlims=(0.398, 0.402), ylims=(-0.02, 0.01)) # start point
+
+# Plots.plot!(xlims=(0.3875, 0.3885), ylims=(-0.1275, -0.118)) # end point
 
 
-Plots.plot!(xlims=(-1.6005, -1.5995), ylims=(-0.01, 0.01))
+# Plots.plot!(xlims=(-1.6005, -1.5995), ylims=(-0.01, 0.01)) # left side
 # Plots.plot!(xlims=(-1.61, -1.59), ylims=(-0.05, 0.05))
+
+
+Plots.plot!(sol1, vars=(1,2))
+Plots.plot!(sol2, vars=(3,4))
+Plots.scatter!(sol1, vars=(1,2); denseplot=false, color=1, markersize=2, markerstrokewidth=0.1, label="")
+Plots.scatter!(sol2, vars=(3,4); denseplot=false, color=2, markersize=2, markerstrokewidth=0.1, label="")
+
+
+
+
+
+
+sol1 = solve(prob, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=1//20)
+sol2 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=1//5, callback=ProbNumDiffEq.ManifoldUpdate(g; save_positions=(false, false)));
+# sol1 = solve(prob, EK1(order=2), abstol=1e-2, reltol=1e-1)
+# sol2 = solve(prob2, EK1(order=3), abstol=1e-2, reltol=1e-1, callback=ProbNumDiffEq.ManifoldUpdate(g; save_positions=(false, false)));
+Plots.plot(sol1, vars=(1,2), color=1, label="")
+Plots.plot!(sol2, vars=(3,4), color=2, label="")
+N = 100
+samples1, _ = ProbNumDiffEq.dense_sample(sol1, N)
+samples2, _ = ProbNumDiffEq.dense_sample(sol2, N)
+
+
+p1 = Plots.plot(appxsol, vars=(1,2), color=:black, linestyle=:dash, label="")
+for i in 1:N
+    Plots.plot!(p1, samples1[:, 1, i], samples1[:, 2, i], label="", color=:gray, alpha=0.8, linewidth=0.1)
+end
+Plots.plot!(p1, sol1, vars=(1,2), color=1, label="")
+Plots.scatter!(p1, sol1, vars=(1,2); denseplot=false, color=1, markersize=2, markerstrokewidth=0.1, label="")
+
+
+p2 = Plots.plot(appxsol, vars=(1,2), color=:black, linestyle=:dash, label="")
+for i in 1:N
+    Plots.plot!(p2, samples2[:, 1, i], samples2[:, 2, i], label="", color=:gray, alpha=0.8, linewidth=0.1)
+end
+Plots.plot!(p2, sol2, vars=(3,4), color=2, label="")
+Plots.scatter!(p2, sol2, vars=(3,4); denseplot=false, color=2, markersize=2, markerstrokewidth=0.1, label="")
+
+
+Plots.plot(p1, p2)
+
+
+
+
 
 ##########################################################################################
 # Can we see something in the residuals?
