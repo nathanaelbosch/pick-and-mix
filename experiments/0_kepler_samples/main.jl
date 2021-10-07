@@ -2,7 +2,7 @@ using ProbNumDiffEq
 using ProbNumDiffEq: X_A_Xt, stack, remake_prob_with_jac
 using DifferentialEquations
 using LinearAlgebra
-using Plots
+using CairoMakie
 
 include("../theme.jl")
 DIR = @__DIR__
@@ -45,7 +45,8 @@ H2(u) = H(u[1:2], u[3:4])
 L2(u) = L(u[1:2], u[3:4])
 
 
-g(u) = [H2(u) - H(du0, u0); L2(u) - L(du0, u0)]
+g1(u) = [H(u) - H(du0, u0); L(u) - L(du0, u0)]
+g2(u) = [H2(u) - H(du0, u0); L2(u) - L(du0, u0)]
 
 
 
@@ -55,159 +56,131 @@ g(u) = [H2(u) - H(du0, u0); L2(u) - L(du0, u0)]
 
 
 
-sol1 = solve(prob, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=1//10)
-# sol2 = solve(prob2, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=dt)
-sol2 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=1//2,
+dt = 1//4
+sol1 = solve(prob, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=dt//3)
+sol2 = solve(prob, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=dt,
+             callback=ProbNumDiffEq.ManifoldUpdate(g1; save_positions=(false, false)));
+sol3 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=dt//3)
+sol4 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=dt,
+
              callback=ProbNumDiffEq.ManifoldUpdate(g; save_positions=(false, false)));
-# sol1 = solve(prob, EK1(order=1))
-# sol2 = solve(prob2, EK1(order=2))
-N = 100
-samples1, _ = ProbNumDiffEq.dense_sample(sol1, N)
-samples2, _ = ProbNumDiffEq.dense_sample(sol2, N)
+# sol1 = solve(prob, EK1(order=2), abstol=1e-3, reltol=1e-1)
+# sol2 = solve(prob2, EK1(order=3), abstol=1e-3, reltol=1e-1,
+#              callback=ProbNumDiffEq.ManifoldUpdate(g; save_positions=(false, false)));
+# N = 100
+# samples1, times = ProbNumDiffEq.dense_sample(sol1, N)
+# samples2, times = ProbNumDiffEq.dense_sample(sol2, N)
 
 
 
-# Plots.plot(sol1, vars=(1,2), xlims=(0.35, 0.45), ylims=(-0.05, 0.05))
-# Plots.plot!(sol2, vars=(3,4))
 
-Plots.plot()
-for i in 1:N
-    Plots.plot!(samples1[:, 1, i], samples1[:, 2, i], label="", color=1, alpha=0.8, linewidth=0.1)
+
+
+fig = Figure(
+    # resolution=(600,170)
+    resolution=(250, 220)
+)
+for i in 1:2, j in 1:2
+    fig[i, j] = Axis(fig,
+                     xgridvisible=false,
+                     ygridvisible=false,
+                     rightspinevisible=true,
+                     topspinevisible=true,
+                     leftspinevisible=true,
+                     bottomspinevisible=true,
+                     aspect = DataAspect(),
+                     xticksvisible=false,
+                     xticklabelsvisible=false,
+                     yticksvisible=false,
+                     yticklabelsvisible=false,
+                     limits=((-2.0, 0.5), (-1.0, 1.0))
+                     )
 end
-Plots.plot!()
-
-# Plots.plot()
-for i in 1:N
-    Plots.plot!(samples2[:, 1, i], samples2[:, 2, i], label="", color=2, alpha=0.8, linewidth=0.1)
-end
-Plots.plot!()
-
-# Plots.plot!(xlims=(0.398, 0.402), ylims=(-0.02, 0.01)) # start point
-
-# Plots.plot!(xlims=(0.3875, 0.3885), ylims=(-0.1275, -0.118)) # end point
 
 
-# Plots.plot!(xlims=(-1.6005, -1.5995), ylims=(-0.01, 0.01)) # left side
-# Plots.plot!(xlims=(-1.61, -1.59), ylims=(-0.05, 0.05))
+for (i, sol) in enumerate((sol1, sol2))
+    N = 100
+    samples1, times = ProbNumDiffEq.dense_sample(sol, N)
 
-
-Plots.plot!(sol1, vars=(1,2))
-Plots.plot!(sol2, vars=(3,4))
-Plots.scatter!(sol1, vars=(1,2); denseplot=false, color=1, markersize=2, markerstrokewidth=0.1, label="")
-Plots.scatter!(sol2, vars=(3,4); denseplot=false, color=2, markersize=2, markerstrokewidth=0.1, label="")
-
-
-
-
-
-
-sol1 = solve(prob, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=1//20)
-sol2 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=1//5, callback=ProbNumDiffEq.ManifoldUpdate(g; save_positions=(false, false)));
-# sol1 = solve(prob, EK1(order=2), abstol=1e-2, reltol=1e-1)
-# sol2 = solve(prob2, EK1(order=3), abstol=1e-2, reltol=1e-1, callback=ProbNumDiffEq.ManifoldUpdate(g; save_positions=(false, false)));
-Plots.plot(sol1, vars=(1,2), color=1, label="")
-Plots.plot!(sol2, vars=(3,4), color=2, label="")
-N = 100
-samples1, _ = ProbNumDiffEq.dense_sample(sol1, N)
-samples2, _ = ProbNumDiffEq.dense_sample(sol2, N)
-
-
-p1 = Plots.plot(appxsol, vars=(1,2), color=:black, linestyle=:dash, label="")
-for i in 1:N
-    Plots.plot!(p1, samples1[:, 1, i], samples1[:, 2, i], label="", color=:gray, alpha=0.8, linewidth=0.1)
-end
-Plots.plot!(p1, sol1, vars=(1,2), color=1, label="")
-Plots.scatter!(p1, sol1, vars=(1,2); denseplot=false, color=1, markersize=2, markerstrokewidth=0.1, label="")
-
-
-p2 = Plots.plot(appxsol, vars=(1,2), color=:black, linestyle=:dash, label="")
-for i in 1:N
-    Plots.plot!(p2, samples2[:, 1, i], samples2[:, 2, i], label="", color=:gray, alpha=0.8, linewidth=0.1)
-end
-Plots.plot!(p2, sol2, vars=(3,4), color=2, label="")
-Plots.scatter!(p2, sol2, vars=(3,4); denseplot=false, color=2, markersize=2, markerstrokewidth=0.1, label="")
-
-
-Plots.plot(p1, p2)
-
-
-
-
-
-##########################################################################################
-# Can we see something in the residuals?
-s1, s2 = stack(sol1.u), stack([u[:] for u in sol2.u])
-as1, as2 = stack(appxsol.(sol1.t)), stack(appxsol.(sol2.t))
-N = 10
-samples1 = ProbNumDiffEq.sample(sol1, N)
-samples2 = ProbNumDiffEq.sample(sol2, N)
-
-Plots.plot(s1[:, 1] - as1[:, 1], s1[:, 2] - as1[:, 2])
-Plots.plot!(s2[:, 3] - as2[:, 1], s2[:, 4] - as2[:, 2])
-
-for i in 1:N
-    Plots.plot!(samples1[:, 1, i] - as1[:, 1], samples1[:, 2, i] - as1[:, 2], color=1, label="", linewidth=0.1)
-end
-for i in 1:N
-    Plots.plot!(samples2[:, 1, i] - as2[:, 1], samples2[:, 2, i] - as2[:, 2], color=2, label="", linewidth=0.1)
-end
-Plots.plot!()
-
-
-
-##########################################################################################
-# Utility
-function scale_solution!(sol, scale, diffscale=scale)
-    sol.diffusions .*= diffscale
-    [copy!(s.Σ, ProbNumDiffEq.apply_diffusion(s.Σ, scale)) for s in sol.x_filt]
-    [copy!(s.Σ, ProbNumDiffEq.apply_diffusion(s.Σ, scale)) for s in sol.x_smooth]
-end
-function plot_samples!(p, sol, N=3; color=:black, width=1, alpha=0.1, label="", kwargs...)
-    samples = ProbNumDiffEq.sample(sol, N);
-    for i in 1:N
-        Plots.plot!(samples[:, 1, i], samples[:, 2, i],
-              color=color, width=width, alpha=alpha, label=label, kwargs...)
+    lines!(
+        fig[i, 1],
+        [u[1] for u in appxsol.u],
+        [u[2] for u in appxsol.u],
+        color=:black,
+        linestyle=:dash,
+    )
+    for j in 1:N
+        lines!(fig[i, 1], samples1[:, 1, j], samples1[:, 2, j],
+               # color=(COLORS[1], 1.0),
+               color=(:gray, 0.5),
+               label="", alpha=0.8, linewidth=0.1)
     end
-    return p, samples
+    ds1 = sol(times).u.μ
+    lines!(
+        fig[i, 1],
+        [u[1] for u in ds1],
+        [u[2] for u in ds1],
+        color=(COLORS[i], 0.8),
+    )
+    scatter!(
+        fig[i, 1],
+        [u[1] for u in sol.u],
+        [u[2] for u in sol.u],
+        color=COLORS[i],
+        markersize=2,
+    )
+    scatter!(fig[i, 1], [sol.u[end][1]], [sol.u[end][2]], color=COLORS[i], markersize=8)
+    scatter!(fig[i, 1], [0], [0], color=:gray, markersize=15)
 end
 
-N = 80
-alpha = 0.5
-width = 0.25
-meanwidth = 2
+
+for (i, sol) in enumerate((sol3, sol4))
+    N = 100
+    samples2, times = ProbNumDiffEq.dense_sample(sol, N)
+    lines!(
+        fig[i, 2],
+        [u[1] for u in appxsol.u],
+        [u[2] for u in appxsol.u],
+        color=:black,
+        linestyle=:dash,
+    )
+    for j in 1:N
+        lines!(fig[i, 2], samples2[:, 1, j], samples2[:, 2, j],
+               # color=(COLORS[2], 1.0),
+               color=(:gray, 0.5),
+               label="", alpha=0.8, linewidth=0.1)
+    end
+    ds2 = sol(times).u.μ
+    lines!(
+        fig[i, 2],
+        [u[3] for u in ds2],
+        [u[4] for u in ds2],
+        color=(COLORS[i+2], 0.8),
+    )
+    scatter!(
+        fig[i, 2],
+        [u[3] for u in sol.u],
+        [u[4] for u in sol.u],
+        color=COLORS[i+2],
+        strokewidth=0.5,
+        markersize=2,
+    )
+    scatter!(fig[i, 2], [sol.u[end][3]], [sol.u[end][4]], color=COLORS[i+2], markersize=8)
+    scatter!(fig[i, 2], [0], [0], color=:gray, markersize=15)
+end
+noto_sans_bold = assetpath("fonts", "NotoSans-Bold.ttf")
+Label(fig[1,1][1,1,TopLeft()], "A", font=noto_sans_bold, textsize=10)
+Label(fig[1,2][1,1,TopLeft()], "B", font=noto_sans_bold, textsize=10)
+Label(fig[2,1][1,1,TopLeft()], "C", font=noto_sans_bold, textsize=10)
+Label(fig[2,2][1,1,TopLeft()], "D", font=noto_sans_bold, textsize=10)
+Label(fig[1,1][1,1,Top()], "First-order ODE", textsize=8)
+Label(fig[1,2][1,1,Top()], "Second-order ODE", textsize=8)
+Label(fig[2,1][1,1,Top()], "Physical conservation", textsize=8)
+Label(fig[2,2][1,1,Top()], "Fully informed", textsize=8)
+
+rowgap!(fig.layout, 10)
+colgap!(fig.layout, 10)
+trim!(fig.layout)
 
 
-##########################################################################################
-# How do samples look WITHOUT the additional update?
-@warn "Make sure to modify the solver code to not use rescaling after the solve!"
-sol = solve(prob, EK0(order=1, diffusionmodel=:fixed), adaptive=false, dt=1//100)
-scale_solution!(sol, 10)
-
-p = Plots.scatter([0], [0], color=:gray, markersize=10, label="", aspect_ratio=:equal)
-p, samples = plot_samples!(p, sol, N; color=:gray, width=width, alpha=alpha)
-p = Plots.plot!([u[1] for u in sol.u], [u[2] for u in sol.u], color=COLORS[1], width=meanwidth,)
-Plots.plot!(ylims=(-1, 1), xlims=(-2, 1), legend=false, ticks=false, axis=false)
-Plots.scatter!(sol[end][1:1], sol[end][2:2], color=COLORS[1], markersize=5, label="")
-Plots.plot!(size=(200,200/3*2))
-savefig(joinpath(DIR, "samples_vanilla.pdf"))
-
-
-
-
-
-
-##########################################################################################
-# How do samples look WITH the additional update?
-g(u) = [H(u) - H(du0, u0); L(u) - L(du0, u0)]
-
-@warn "Make sure to modify the solver code to not use rescaling after the solve!"
-sol_m = solve(prob, EK0(order=1, diffusionmodel=:fixed, manifold=g), adaptive=false, dt=1//70)
-scale_solution!(sol_m, 20)
-
-p_m = scatter([0], [0], color=:gray, markersize=10, label="", aspect_ratio=:equal)
-p_m, samples_m = plot_samples!(p_m, sol_m, N; color=:gray, width=width, alpha=alpha)
-p_m = plot!([u[1] for u in sol_m.u], [u[2] for u in sol_m.u], color=COLORS[2], width=meanwidth,)
-plot!(ylims=(-1, 1), xlims=(-2, 1), legend=false, ticks=false, axis=false)
-scatter!(sol_m[end][1:1], sol_m[end][2:2], color=COLORS[2], markersize=5, label="")
-plot!(size=(200,200/3*2))
-savefig(joinpath(DIR, "samples_informed.pdf"))
+save(joinpath(DIR, "figure1.pdf"), fig, pt_per_unit=1)

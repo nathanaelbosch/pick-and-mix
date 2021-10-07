@@ -9,38 +9,15 @@ using CairoMakie
 using LaTeXStrings
 
 
+include("../theme.jl")
 DIR = @__DIR__
 
-
-COLORS = parse.(
-    RGB, ["#107D79", "#FF9933", "#1F77B4", "#D62728", "#9467BD", "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF"]
-)
-
-
-
-
-set_theme!()
-theme = Theme(
-    fontsize=10,
+update_theme!(
     Axis=(
         xgridvisible=false,
         ygridvisible=false,
-        topspinevisible=false,
-        rightspinevisible=false,
-        spinewidth=0.7,
-        xtickwidth=0.7,
-        ytickwidth=0.7,
-        xticksize=2,
-        yticksize=2,
-        xticklabelsize=9,
-        yticklabelsize=9,
     ),
-    Legend=(
-        labelsize=9,
-        framevisible=false,
-    )
 )
-set_theme!(theme)
 
 
 # Problem definition
@@ -63,14 +40,15 @@ true_second_derivative(t) = ForwardDiff.derivative(true_derivative, t)
 # Plot them
 prange = tspan[1]:0.1:tspan[2]
 fig = Figure(
-    resolution = (600, 150),
-    # resolution = (250, 150),
+    # resolution = (600, 150),
+    resolution = (250, 300),
     figure_padding = 5,
 )
-ax1 = fig[1, 1] = Axis(fig, title=L"Y^{(0)}", xlabel=L"t")
-ax2 = fig[1, 2] = Axis(fig, title=L"Y^{(0)} - y", xlabel=L"t")
-ax3 = fig[1, 3] = Axis(fig, title=L"Y^{(1)} - \dot{y}", xlabel=L"t")
-ax4 = fig[1, 4] = Axis(fig, title=L"Y^{(2)} - \ddot{y}", xlabel=L"t")
+
+ax1 = fig[1, 1] = Axis(fig, ylabel=L"Y^{(0)}", xticksvisible=false, xticklabelsvisible=false)
+ax2 = fig[2, 1] = Axis(fig, ylabel=L"Y^{(0)} - y", xticksvisible=false, xticklabelsvisible=false)
+ax3 = fig[3, 1] = Axis(fig, ylabel=L"Y^{(1)} - \dot{y}", xticksvisible=false, xticklabelsvisible=false)
+ax4 = fig[4, 1] = Axis(fig, ylabel=L"Y^{(2)} - \ddot{y}", xlabel=L"t")
 fig
 
 lines!(ax1, 0:0.1:3, true_solution.(0:0.1:3), linestyle=:dash, color=:black)
@@ -131,7 +109,7 @@ N = 8
 order = 3
 sol1 = solve(prob, EK1(order=order, diffusionmodel=:fixed),
              adaptive=false, tstops=range(tspan...; length=N))
-sol2 = solve(prob, EK1FDB(order=order, diffusionmodel=:fixed, jac_quality=3),
+sol2 = solve(prob, EK1FDB(order=order, diffusionmodel=:fixed),
              adaptive=false, tstops=range(tspan...; length=N))
 plot_sol(sol1, 1)
 plot_sol(sol2, 2)
@@ -144,26 +122,18 @@ e2 = [LineElement(color = COLORS[2], linestyle = :solid),
 e3 = LineElement(color = :black, linestyle = :dash)
 
 leg = fig[0, :] = Legend(
-    fig, [e1, e2,
-          # e3
-          ],
+    fig, [e1, e2],
     [
-        # "1st. derivative", "1st. & 2nd derivative",
-        # "first order", "second order",
-        # "without ÿ", "with ÿ",
-        # "without 2nd derivative information",
-        # "with 2nd derivative information",
-        "Solved with only ODE information",
-        # "with ÿ(t) information",
-        "Solved with ODE and second-derivative information",
-        # "without 2nd derivative", "with 2nd derivative",
+        "Without ÿ", "With ÿ",
+        # "Solved with only ODE information",
+        # "Solved with ODE and second-derivative information",
      # "true solution"
      ],
     orientation=:horizontal,
+    # orientation=:vertical,
     tellwidth=false,
     tellheight=true,
     framevisible=false,
-    patchsize=(13,13),
 )
 trim!(fig.layout)
 fig
@@ -198,8 +168,10 @@ ax4.yticks = [-0.2, 0.2]
 ylims!(ax1, -0.2, 1.2)
 ax1.yticks = [0,1]
 
-rowgap!(fig.layout, 0)
+rowgap!(fig.layout, 10)
+rowgap!(fig.layout, 1, 0)
 colgap!(fig.layout, 15)
 trim!(fig.layout)
+
 
 save(joinpath(DIR, "fig4.pdf"), fig, pt_per_unit=1)

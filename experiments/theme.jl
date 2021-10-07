@@ -36,6 +36,9 @@ theme = Theme(
         labelsize=9,
         framevisible=false,
         patchsize=(13,13),
+    ),
+    Scatter = (
+        strokewidth=0.5,
     )
 )
 set_theme!(theme)

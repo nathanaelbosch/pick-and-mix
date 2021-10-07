@@ -1,6 +1,7 @@
 using ProbNumDiffEq
 using ProbNumDiffEq: stack
 using OrdinaryDiffEq
+using SciPyDiffEq
 using Plots: RGB
 using BenchmarkTools
 using DiffEqDevTools
@@ -111,8 +112,10 @@ function MyWorkPrecision(prob, alg, abstols, reltols, args...;
             :time => tbest,
             # :time => minimum(b).time / 1e9,
             # :memory => minimum(b).memory / 2^30,
-            :nf => errsol.destats.nf,
-            :njacs => errsol.destats.njacs,
+            :nf =>
+                isnothing(errsol.destats) ? nothing : errsol.destats.nf,
+            :njacs =>
+                isnothing(errsol.destats) ? nothing : errsol.destats.njacs,
         )
         if sol isa ProbNumDiffEq.ProbODESolution
             r[:chi2_final] = chi2(sol.pu[end], appxsol.(sol.t[end]))[1]
@@ -134,10 +137,18 @@ abstols = 1.0 ./ 10.0 .^ (6:11)
 reltols = 1.0 ./ 10.0 .^ (3:8)
 
 
-wps["Tsit5"] = MyWorkPrecision(prob1, Tsit5(), abstols ./ 10, reltols ./ 10; dense=false)
-wps["RadauIIA5"] = MyWorkPrecision(prob1, RadauIIA5(), abstols ./ 10, reltols ./ 10; dense=false)
-wps["Vern6"] = MyWorkPrecision(prob1, Vern6(), abstols ./ 10, reltols ./ 10; dense=false)
-wps["DPRKN6"] = MyWorkPrecision(prob2, DPRKN6(), abstols, reltols; dense=false)
+wps["Tsit5"] = MyWorkPrecision(prob1, Tsit5(), abstols ./ 10, reltols ./ 10; dense=false,
+                               save_everystep=false)
+wps["RadauIIA5"] = MyWorkPrecision(prob1, RadauIIA5(), abstols ./ 10, reltols ./ 10;
+                                   dense=false, save_everystep=false)
+wps["Vern6"] = MyWorkPrecision(prob1, Vern6(), abstols ./ 10, reltols ./ 10; dense=false,
+                               save_everystep=false)
+wps["DPRKN6"] = MyWorkPrecision(prob2, DPRKN6(), abstols, reltols; dense=false,
+                               save_everystep=false)
+wps["RK45-SciPy"] = MyWorkPrecision(prob1, SciPyDiffEq.RK45(), abstols, reltols;
+                                    dense=false, save_everystep=false)
+wps["LSODA-SciPy"] = MyWorkPrecision(prob1, SciPyDiffEq.LSODA(), abstols, reltols;
+                                     dense=false, save_everystep=false)
 
 
 # order = 3

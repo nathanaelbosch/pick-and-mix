@@ -94,21 +94,29 @@ end
 
 
 npn_keys = (
-    "Tsit5",
+    # "Tsit5",
+    "Vern6",
     "DPRKN6",
     "RadauIIA5",
-    "Vern6",
+    "RK45-SciPy",
+    "LSODA-SciPy",
 )
 npn_labels = (
     # "Runge-Kutta (Tsit5)",
     "Runge-Kutta (Vern6)",
     "R-K-Nyström (DPRKN6)",
     "Implicit R-K (RadauIIA5)",
+    "Runge-Kutta (SciPy)",
+    "LSODA (SciPy)",
 )
 npn_sclines = []
 for (j,(k,l)) in enumerate(zip(npn_keys, npn_labels))
     for (i,x) in enumerate((:nf, :time))
         wp = wps[k]
+        @info "??" k wp isnothing(wp[1][x])
+        if isnothing(wp[1][x])
+            continue
+        end
         scl = scatterlines!(
             fig[1,i+1],
             [r[x] for r in wp], [r[:final] for r in wp],
@@ -117,9 +125,9 @@ for (j,(k,l)) in enumerate(zip(npn_keys, npn_labels))
             markersize=5,
             linewidth=3,
             strokewidth=0.5,
-            marker=[:utriangle, :dtriangle, :rect, :pentagon][j],
+            marker=[:utriangle, :dtriangle, :rect, :rtriangle, :pentagon][j],
         )
-        (i == 1) && push!(npn_sclines, scl)
+        (i == 2) && push!(npn_sclines, scl)
     end
 end
 
