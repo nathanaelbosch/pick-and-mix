@@ -63,6 +63,9 @@ interp(sol, times) = StructArray([
     sol.interp(t, sol.t, sol.x_filt, sol.x_smooth, sol.diffusions) for t in times])
 function plot_sol(
     sol, c;
+    color=COLORS[c],
+    marker=[:circle, :utriangle][c],
+    axes=(ax1, ax2, ax3, ax4),
     times = tspan[1]:0.025:tspan[2]
     )
     x = interp(sol, times)
@@ -72,16 +75,18 @@ function plot_sol(
     true_vals_dense = [true_solution.(times) true_derivative.(times) true_second_derivative.(times)]
     true_vals = [true_solution.(sol.t) true_derivative.(sol.t) true_second_derivative.(sol.t)]
 
+    ax1, ax2, ax3, ax4 = axes
+
     lines!(
         ax1, times, means[:, 1],
         linewidth=2.5,
-        color=(COLORS[c], 0.7),
+        color=(color, 0.7),
     )
     scatter!(
         ax1, sol.t, stack(sol.x_smooth.μ)[:, 1],
-        color=COLORS[c], markercolor=COLORS[c], size=5,
+        color=color, markercolor=color, size=5,
         markersize=c==1 ? 10 : 8,
-        marker=c==1 ? :circle : :utriangle,
+        marker=marker,
         strokewidth=0.5,
     )
 
@@ -89,19 +94,19 @@ function plot_sol(
         lines!(
             ax, times, means[:, i] - true_vals_dense[:, i],
             linewidth=2.5,
-            color=(COLORS[c], 0.7),
+            color=(color, 0.7),
         )
         scatter!(
         ax, sol.t, stack(sol.x_smooth.μ)[:, i] - true_vals[:, i],
-            color=COLORS[c], markercolor=COLORS[c], size=5,
+            color=color, markercolor=color, size=5,
             markersize=c==1 ? 10 : 8,
-            marker=c==1 ? :circle : :utriangle,
+            marker=marker,
             strokewidth=0.5,
         )
         band!(ax, times,
               means[:, i] .- 1.96 .* stds[:, i] - true_vals_dense[:, i],
               means[:, i] .+ 1.96 .* stds[:, i] - true_vals_dense[:, i],
-          color=(COLORS[c], 0.2))
+          color=(color, 0.2))
     end
 end
 
@@ -109,7 +114,7 @@ N = 8
 order = 3
 sol1 = solve(prob, EK1(order=order, diffusionmodel=:fixed),
              adaptive=false, tstops=range(tspan...; length=N))
-sol2 = solve(prob, EK1FDB(order=order, diffusionmodel=:fixed),
+sol2 = solve(prob, EK1FDB(order=order, diffusionmodel=:fixed, jac_quality=3),
              adaptive=false, tstops=range(tspan...; length=N))
 plot_sol(sol1, 1)
 plot_sol(sol2, 2)

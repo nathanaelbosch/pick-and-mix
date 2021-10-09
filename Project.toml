@@ -1,6 +1,7 @@
 [deps]
 BSON = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 DiffEqDevTools = "f3b72e0c-5b89-59e1-b016-84e28bfd966d"
 DiffEqProblemLibrary = "a077e3f3-b75c-5d7f-a0c6-6bc4c8ec64a9"
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
