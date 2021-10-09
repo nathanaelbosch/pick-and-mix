@@ -10,8 +10,8 @@ DIR = @__DIR__
 d = load(joinpath(DIR, "workprecisiondata.jld"))
 wps = d["wps"]
 
-ODE1_o4_times = [w[:time] for w in wps["ODE1;o=4;EK0"]]
-ODE2_o4_times = [w[:time] for w in wps["ODE2;o=4;EK0"]]
+ODE1_o4_times = [w[:time] for w in wps["ODE1;o=3;EK0"]]
+ODE2_o4_times = [w[:time] for w in wps["ODE2;o=3;EK0"]]
 ODE1_o5_times = [w[:time] for w in wps["ODE1;o=5;EK1"]]
 ODE2_o5_times = [w[:time] for w in wps["ODE2;o=5;EK1"]]
 
@@ -51,8 +51,8 @@ appxsol = solve(remake(prob1, u0=big.(prob1.u0)), Vern9(), abstol=1e-20, reltol=
 
 
 fig = Figure(
-    # resolution=(600,200)
-    resolution=(600,180)
+    resolution=(600,150),
+    figure_padding = 1,
 )
 
 ax = fig[1, 1] = Axis(
@@ -64,6 +64,7 @@ ax = fig[1, 1] = Axis(
     yticksvisible=false,
     xticklabelsvisible=false,
     yticklabelsvisible=false,
+    aspect = AxisAspect(1),
 )
 ax2 = fig[1, 2] = Axis(fig, yscale=log10, xscale=log10)
 ax3 = fig[1, 3] = Axis(fig, yscale=log10, xscale=log10)
@@ -98,16 +99,16 @@ npn_keys = (
     "Vern6",
     "DPRKN6",
     "RadauIIA5",
-    "RK45-SciPy",
-    "LSODA-SciPy",
+    # "RK45-SciPy",
+    # "LSODA-SciPy",
 )
 npn_labels = (
     # "Runge-Kutta (Tsit5)",
     "Runge-Kutta (Vern6)",
     "R-K-Nyström (DPRKN6)",
     "Implicit R-K (RadauIIA5)",
-    "Runge-Kutta (SciPy)",
-    "LSODA (SciPy)",
+    # "Runge-Kutta (SciPy)",
+    # "LSODA (SciPy)",
 )
 npn_sclines = []
 for (j,(k,l)) in enumerate(zip(npn_keys, npn_labels))
@@ -132,18 +133,18 @@ for (j,(k,l)) in enumerate(zip(npn_keys, npn_labels))
 end
 
 
-pn_keys = (
-    "ODE1;o=4;EK0",
-    "ODE2;o=4;EK0",
+pn_labels =pn_keys = (
+    "ODE1;o=3;EK0",
+    "ODE2;o=3;EK0",
     "ODE1;o=5;EK1",
     "ODE2;o=5;EK1",
 )
 pn_labels = (
     # "first-order ODE; IWP(2)",
-    "1st order  (IWP(3), EK0)",
-    "2nd order (IWP(4), EK0)",
-    "1st order  (IWP(4), EK1)",
-    "2nd order (IWP(5), EK1)",
+    "1st order  (EK0, IWP(2))",
+    "2nd order (EK0, IWP(3))",
+    "1st order  (EK1, IWP(4))",
+    "2nd order (EK1, IWP(5))",
 )
 pn_sclines = []
 for (j,(k,l)) in enumerate(zip(pn_keys, pn_labels))
@@ -153,8 +154,8 @@ for (j,(k,l)) in enumerate(zip(pn_keys, pn_labels))
             fig[1,i+1],
             [r[x] for r in wp], [r[:final] for r in wp],
             # color=(COLORS[j],0.5),
-            color=([COLORS[1], COLORS[2], COLORS[1], COLORS[2]][j], 0.5),
-            markercolor=[COLORS[1], COLORS[2], COLORS[1], COLORS[2]][j],
+            color=([COLORS[4], COLORS[3], COLORS[4], COLORS[3]][j], 0.5),
+            markercolor=[COLORS[4], COLORS[3], COLORS[4], COLORS[3]][j],
             # marker=[:pentagon, :diamond, :star5, :star4][2i+j-2],
             marker=[:pentagon, :star5, :diamond, :star4][j],
             strokewidth=0.5, linewidth=3, markersize=10,

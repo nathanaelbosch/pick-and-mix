@@ -9,24 +9,27 @@ using LinearAlgebra
 using JLD
 
 
+include("../workprecision.jl")
 DIR = @__DIR__
 
 
-function pleiades(du,u,p,t)
+@fastmath function pleiades(du,u,p,t)
     v = view(u,1:7)   # x
     w = view(u,8:14)  # y
     x = view(u,15:21) # x′
     y = view(u,22:28) # y′
     du[15:21] .= v
     du[22:28].= w
-    for i in 1:14
+    @inbounds @simd ivdep for i in 1:14
         du[i] = zero(eltype(u))
     end
-    for i=1:7,j=1:7
-        if i != j
-            r = ((x[i]-x[j])^2 + (y[i] - y[j])^2)^(3/2)
-            du[i] += j*(x[j] - x[i])/r
-            du[7+i] += j*(y[j] - y[i])/r
+    @inbounds @simd ivdep for i=1:7
+        @inbounds @simd ivdep for j=1:7
+            if i != j
+                r = ((x[i]-x[j])^2 + (y[i] - y[j])^2)^(3/2)
+                du[i] += j*(x[j] - x[i])/r
+                du[7+i] += j*(y[j] - y[i])/r
+            end
         end
     end
 end
@@ -63,70 +66,6 @@ prob2 = SecondOrderODEProblem(pleiades2, du0, u0, tspan)
 ######################################################################################
 # WP
 ######################################################################################
-function chi2(gaussian_estimate, actual_value)
-    μ, Σ = gaussian_estimate
-    diff = μ - actual_value
-    # R = qr(Σ.squareroot').R
-
-    # @assert R'R ≈ Matrix(Σ)
-
-    chi2_pinv = diff' * pinv(Matrix(Σ)) * diff
-    return chi2_pinv
-end
-function MyWorkPrecision(prob, alg, abstols, reltols, args...;
-                         dts=nothing, appxsol=appxsol, kwargs...)
-    results = []
-    for (i, (atol, rtol)) in enumerate(zip(abstols, reltols))
-        @info "info" alg atol rtol
-
-        sol_call() = isnothing(dts) ?
-            solve(prob, alg, abstol=atol, reltol=rtol, args...; kwargs...) :
-            solve(prob, alg, abstol=atol, reltol=rtol,
-                  adaptive=false, tstops=prob.tspan[1]:dts[i]:prob.tspan[2],
-                  args...; kwargs...)
-
-        sol = sol_call()
-        errsol = sol isa ProbNumDiffEq.ProbODESolution ?
-            appxtrue(mean(sol), appxsol;
-                     dense_errors=false,
-                     timeseries_errors=false,
-                     ) : appxtrue(sol, appxsol;
-                                  dense_errors=false,
-                                  timeseries_errors=false,
-                                  )
-
-        # Time
-        # b = @benchmark $sol_call() samples=5 seconds=100
-        # b = @benchmark $sol_call()
-        tbest = 9999999999999999
-        for i in 1:3
-            t = @elapsed sol_call()
-            tbest = min(tbest, t)
-        end
-
-
-        r = Dict(
-            :final => errsol.errors[:final],
-            # :l2 => errsol.errors[:l2],
-            # :L2 => errsol.errors[:L2],
-            :time => tbest,
-            # :time => minimum(b).time / 1e9,
-            # :memory => minimum(b).memory / 2^30,
-            :nf =>
-                isnothing(errsol.destats) ? nothing : errsol.destats.nf,
-            :njacs =>
-                isnothing(errsol.destats) ? nothing : errsol.destats.njacs,
-        )
-        if sol isa ProbNumDiffEq.ProbODESolution
-            r[:chi2_final] = chi2(sol.pu[end], appxsol.(sol.t[end]))[1]
-            # r[:final_std] = std(sol.pu[end])
-        end
-
-
-        push!(results, r)
-    end
-    return results
-end
 
 
 wps = Dict()
@@ -161,11 +100,11 @@ smooth = false
 #         prob2, EK1(order=o, smooth=smooth, initial_derivatives=dfs2),
 #         abstols, reltols; dense=smooth, save_everystep=false)
 # end
-wps["ODE1;o=4;EK0"] = MyWorkPrecision(
-    prob1, EK0(order=3, smooth=smooth),
+wps["ODE1;o=3;EK0"] = MyWorkPrecision(
+    prob1, EK0(order=2, smooth=smooth),
     abstols, reltols; dense=smooth, save_everystep=false)
-wps["ODE2;o=4;EK0"] = MyWorkPrecision(
-    prob2, EK0(order=4, smooth=smooth),
+wps["ODE2;o=3;EK0"] = MyWorkPrecision(
+    prob2, EK0(order=3, smooth=smooth),
     abstols, reltols; dense=smooth, save_everystep=false)
 wps["ODE1;o=5;EK1"] = MyWorkPrecision(
     prob1, EK1(order=4, smooth=smooth),
