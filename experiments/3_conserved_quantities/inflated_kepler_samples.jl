@@ -7,6 +7,7 @@ using CairoMakie
 
 
 include("../theme.jl")
+COLORS = COLORS[[4,3]]
 DIR = @__DIR__
 
 
@@ -77,10 +78,10 @@ meanwidth = 2
 
 
 ALG = EK0
-ORDER, SCALE = 2, 100
+ORDER, SCALE = 1, 3
 # ORDER, SCALE = 2, 500
 DT = 1//50
-RESCALE = 10
+RESCALE = 100
 
 @info "Experiment information:" ALG ORDER DT SCALE informed_solver_scale=SCALE*RESCALE
 
@@ -148,8 +149,9 @@ g2(u) = [H2(u) - H(du0, u0); L2(u) - L(du0, u0)]
 #               callback=ProbNumDiffEq.ManifoldUpdate(g1; save_positions=(false, false), maxiters=1));
 # sol_m = solve(prob, ALG(order=ORDER, diffusionmodel=:fixed), adaptive=false, dt=DT,
 #               callback=ProbNumDiffEq.ManifoldUpdate(g1; save_positions=(false, false)));
-sol_m = solve(prob2, ALG(order=ORDER+1, diffusionmodel=:fixed), adaptive=false, dt=DT,
-              callback=ProbNumDiffEq.ManifoldUpdate(g2; save_positions=(false, false), maxiters=1));
+# sol_m = solve(prob2, ALG(order=ORDER+1, diffusionmodel=:fixed), adaptive=false, dt=DT,
+#               callback=ProbNumDiffEq.ManifoldUpdate(g2; save_positions=(false, false), maxiters=1));
+sol_m = solve(prob2, ALG(order=ORDER+1, diffusionmodel=:fixed, manifold=g2), adaptive=false, dt=DT);
 @info "informed nf" sol_m.destats.nf
 scale_solution!(sol_m, SCALE*RESCALE)
 

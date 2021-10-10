@@ -1,5 +1,3 @@
-############################################################################################
-# Plotting
 using CairoMakie
 using JLD
 using Statistics
@@ -52,7 +50,7 @@ appxsol = solve(remake(prob1, u0=big.(prob1.u0)), Vern9(), abstol=1e-20, reltol=
 
 fig = Figure(
     resolution=(600,150),
-    figure_padding = 1,
+    figure_padding = 5,
 )
 
 ax = fig[1, 1] = Axis(
@@ -99,22 +97,21 @@ npn_keys = (
     "Vern6",
     "DPRKN6",
     "RadauIIA5",
-    # "RK45-SciPy",
-    # "LSODA-SciPy",
+    "RK45-SciPy",
+    "LSODA-SciPy",
 )
 npn_labels = (
     # "Runge-Kutta (Tsit5)",
     "Runge-Kutta (Vern6)",
     "R-K-Nyström (DPRKN6)",
     "Implicit R-K (RadauIIA5)",
-    # "Runge-Kutta (SciPy)",
-    # "LSODA (SciPy)",
+    "Runge-Kutta (SciPy)",
+    "LSODA (SciPy)",
 )
 npn_sclines = []
 for (j,(k,l)) in enumerate(zip(npn_keys, npn_labels))
     for (i,x) in enumerate((:nf, :time))
         wp = wps[k]
-        @info "??" k wp isnothing(wp[1][x])
         if isnothing(wp[1][x])
             continue
         end
@@ -157,7 +154,7 @@ for (j,(k,l)) in enumerate(zip(pn_keys, pn_labels))
             color=([COLORS[4], COLORS[3], COLORS[4], COLORS[3]][j], 0.5),
             markercolor=[COLORS[4], COLORS[3], COLORS[4], COLORS[3]][j],
             # marker=[:pentagon, :diamond, :star5, :star4][2i+j-2],
-            marker=[:pentagon, :star5, :diamond, :star4][j],
+            marker=[:diamond, :star4, :pentagon, :star5,][j],
             strokewidth=0.5, linewidth=3, markersize=10,
         )
         (i == 1) && push!(pn_sclines, scl)
@@ -194,5 +191,7 @@ ax3.yticks = ([1e-2, 1e-6, 1e-10], ["10⁻²", "10⁻⁶", "10⁻¹⁰"])
 ax3.ylabelvisible=false
 ax3.yticklabelsvisible=false
 
+colgap!(fig.layout, 10)
+trim!(fig.layout)
 
 save(joinpath(DIR, "fig3_secondorder_workprecision.pdf"), fig, pt_per_unit=1)

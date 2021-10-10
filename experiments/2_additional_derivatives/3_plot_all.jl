@@ -12,7 +12,18 @@ wps_vdp = d["wps"]
 d = load(joinpath(DIR, "lv_wps.jld"))
 wps_lv = d["wps"]
 
-C1, C2 = ColorSchemes.seaborn_muted[[4,3]]
+# C1, C2, C3, C4 = ColorSchemes.seaborn_muted[[4,3,4,3]]
+# C1, C2, C3, C4 = ColorSchemes.Accent_3[[2,3,2,3]]
+# C1, C2, C3, C4 = ColorSchemes.BrBG_4[[2,3,1,4]]
+# ColorSchemes.PRGn_4
+# C1, C2, C3, C4 = ColorSchemes.Paired_4[[1,3,2,4]]
+# C1, C2, C3, C4 = ColorSchemes.Paired_4[[1,2,3,4]]
+# C1, C2, C3, C4 = ColorSchemes.BrBG_4[[2,3,1,4]]
+C1, C2, C3, C4 = ColorSchemes.PuOr_4[[2,3,1,4]]
+# C1, C2, C3, C4 = ColorSchemes.Dark2_4
+# C1, C2, C3, C4 = ColorSchemes.Set1_4
+# C1, C2, C3, C4 = ColorSchemes.Set2_4
+# C1, C2, C3, C4 = ColorSchemes.Set3_7[4:7]
 # C1, C2 = GRUVBOX_DARK[1], GRUVBOX_LIGHT[2]
 LINEALPHA = 0.6
 MARKERS = Dict(
@@ -31,7 +42,7 @@ MARKERS = Dict(
 
 fig = Figure(
     resolution=(600,250),
-    figure_padding = 1,
+    figure_padding = 5,
 )
 g1 = fig[1:4, 1] = GridLayout()
 g2 = fig[1:2, 2:3] = GridLayout()
@@ -123,8 +134,8 @@ for (i, x, ax) in ((1, :nf, p2ax1), (2,:time, p2ax2))
         scl = scatterlines!(
             ax,
             [r[x] for r in wp], [r[y] for r in wp],
-            color=([C1, C2][(j+1)%2+1], LINEALPHA),
-            markercolor=[C1, C2][(j+1)%2+1],
+            color=([C1, C2, C3, C4][j], LINEALPHA),
+            markercolor=[C1, C2, C3, C4][j],
             # linestyle=[:solid, :dash, :dot][j],
             marker=MARKERS[k],
             markersize=10,
@@ -189,8 +200,8 @@ for (i, x, ax) in ((1, :nf, p3ax1), (2,:time, p3ax2))
         scl = scatterlines!(
             ax,
             [r[x] for r in wp], [r[y] for r in wp],
-            color=([C1, C2][(j+1)%2+1], LINEALPHA),
-            markercolor=[C1, C2][(j+1)%2+1],
+            color=([C1, C2, C3, C4][j], LINEALPHA),
+            markercolor=[C1, C2, C3, C4][j],
             # linestyle=[:solid, :dash, :dot][j],
             marker=MARKERS[k],
             markersize=10,
@@ -259,5 +270,7 @@ Label(g2[:, :, Top()], "Lotka-Volterra",
 Label(g3[:, :, Top()], "Van-der-Pol",
       padding = (0, 0, 5, 0))
 
+colgap!(fig.layout, 3, 15)
+trim!(fig.layout)
 
 save(joinpath(DIR, "fdb_plot.pdf"), fig, pt_per_unit=1)

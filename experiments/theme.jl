@@ -1,10 +1,11 @@
 using CairoMakie
+using ColorSchemes
 using Plots: RGB
 
 
-# COLORS = parse.(
-#     RGB, ["#107D79", "#FF9933", "#1F77B4", "#D62728", "#9467BD", "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF"]
-# )
+PN_COLORS = parse.(
+    RGB, ["#107D79", "#FF9933", "#1F77B4", "#D62728", "#9467BD", "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF"]
+)
 
 # Gruvbox
 COLORS = parse.(RGB, [
@@ -41,6 +42,9 @@ GRUVBOX_LIGHT = parse.(RGB, [
 set_theme!()
 theme = Theme(
     fontsize=10,
+    Figure=(
+        figure_padding=5
+    ),
     Axis=(
         # xgridvisible=false,
         # ygridvisible=false,
@@ -57,7 +61,8 @@ theme = Theme(
     Legend=(
         labelsize=9,
         framevisible=false,
-        patchsize=(13,13),
+        patchsize=(10,10),
+        padding=(0,0,0,0),
     ),
     Scatter = (
         strokewidth=0.5,

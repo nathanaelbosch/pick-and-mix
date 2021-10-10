@@ -35,7 +35,7 @@ function MyWorkPrecision(prob, alg, abstols, reltols, args...;
         # b = @benchmark $sol_call() samples=5 seconds=100
         # b = @benchmark $sol_call()
         tbest = 9999999999999999
-        for i in 1:3
+        for i in 1:5
             t = @elapsed sol_call()
             tbest = min(tbest, t)
         end
