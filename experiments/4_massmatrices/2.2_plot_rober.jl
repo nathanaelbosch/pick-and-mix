@@ -18,14 +18,14 @@ C1, C2, C3 = ColorSchemes.Dark2_3
 # C1, C2, C3 = ColorSchemes.seaborn_pastel[1:3]
 LINEALPHA = 0.6
 STYLE = Dict(
-    "R23 (DAE)" => (:dtriangle, :gray),
-    "Rodas5 (DAE)" => (:utriangle, :gray),
-    "Rodas4 (DAE)" => (:rtriangle, :gray),
-    "Radau (DAE)" => (:rect, :gray),
-    "QNDF (DAE)" => (:diamond, :gray),
-    "EK1(2) (DAE)" => (:star4, C1),
-    "EK1(3) (DAE)" => (:star5, C2),
-    "EK1(5) (DAE)" => (:star8, C3),
+    "R23" => (:dtriangle, :gray),
+    "Rodas5" => (:utriangle, :gray),
+    "Rodas4" => (:rtriangle, :gray),
+    "Radau" => (:rect, :gray),
+    "QNDF" => (:diamond, :gray),
+    "EK1(2)" => (:star4, C1),
+    "EK1(3)" => (:star5, C2),
+    "EK1(5)" => (:star8, C3),
     "EK1(2) (ODE + cb)" => (:diamond, C1),
     "EK1(3) (ODE + cb)" => (:diamond, C2),
     "EK1(5) (ODE + cb)" => (:diamond, C3),
@@ -36,15 +36,15 @@ STYLE = Dict(
 
 
 npn_keys, npn_labels = zip([
-    ("R23 (DAE)", "Ros23"),
-    ("Rodas5 (DAE)", "Rodas5"),
-    ("QNDF (DAE)", "QNDF"),
+    ("R23", "Ros23"),
+    ("Rodas5", "Rodas5"),
+    ("QNDF", "QNDF"),
 ]...)
 
 pn_keys, pn_labels = zip([
-    ("EK1(2) (DAE)", "EK1(2)"),
-    ("EK1(3) (DAE)", "EK1(3)"),
-    ("EK1(5) (DAE)", "EK1(5)"),
+    ("EK1(2)", "EK1(2)"),
+    ("EK1(3)", "EK1(3)"),
+    ("EK1(5)", "EK1(5)"),
     # ("EK1(2) (ODE + manifold)", "EK1(2) ODE + manifold"),
     # ("EK1(3) (ODE + manifold)", "EK1(3) ODE + manifold"),
     # ("EK1(5) (ODE + manifold)", "EK1(5) ODE + manifold"),

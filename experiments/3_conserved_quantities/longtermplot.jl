@@ -11,6 +11,7 @@ DIR = @__DIR__
 
 
 LINEWIDTH = 0.1
+COLORS = ColorSchemes.BrBG_4[[4,1]]
 
 
 ######################################################################################
@@ -81,13 +82,13 @@ lines!(ax2,
        [u[3] for u in sol1.u],
        [u[4] for u in sol1.u],
        linewidth=LINEWIDTH,
-       color=PN_COLORS[1],
+       color=COLORS[1],
        )
 lines!(ax3,
        [u[3] for u in sol2.u],
        [u[4] for u in sol2.u],
        linewidth=LINEWIDTH,
-       color=PN_COLORS[2],
+       color=COLORS[2],
        )
 
 colgap!(fig.layout, 0)

@@ -7,7 +7,7 @@ using CairoMakie
 
 
 include("../theme.jl")
-COLORS = COLORS[[4,3]]
+COLORS = ColorSchemes.BrBG_4[[4,1]]
 DIR = @__DIR__
 
 

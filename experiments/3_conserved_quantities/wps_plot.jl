@@ -10,10 +10,8 @@ d = load(joinpath(DIR, "henonheiles.jld"))
 wps = d["wps"]
 
 
-# COLORS = ColorSchemes.RdBu_4[[1,4,2,3]]
-# COLORS = ColorSchemes.RdBu_6[[1,6,2,5,3,4]]
-# COLORS = ColorSchemes.RdBu_6[[3,4,2,5,1,6]]
-COLORS = ColorSchemes.RdBu_6[[3,2,1,4,5,6]]
+# COLORS = ColorSchemes.BrBG_4[[2,1,3,4]]
+COLORS = ColorSchemes.BrBG_4[[3,4,2,1]]
 MARKERS = Dict(
     "Tsit5" => :dtriangle,
     "Tsit5 w/ g" => :utriangle,
@@ -30,7 +28,7 @@ MARKERS = Dict(
 
 
 fig = Figure(
-    resolution=(600,150),
+    resolution=(600,120),
     figure_padding=5,
 )
 
@@ -42,7 +40,7 @@ axes = [ax1, ax2, ax3]
 # [
 # ],
 npn_keys, npn_labels = zip([
-    ("Tsit5", "Runge-Kutta (Tsit5)"),
+    # ("Tsit5", "Runge-Kutta (Tsit5)"),
     ("Tsit5 w/ g", "RK + projection. (Tsit5)"),
     ("DPRKN6", "RK-Nystöm (DPRKN6)"),
     # ("SymplecticEuler",
@@ -51,10 +49,10 @@ npn_keys, npn_labels = zip([
 
 pn_keys, pn_labels = zip([
     ("EK1(3)", "EK1(3) (only ODE)"),
-    ("EK1(5)", "EK1(5) (only ODE)"),
+    # ("EK1(5)", "EK1(5) (only ODE)"),
     ("EK1(8)", "EK1(8) (only ODE)"),
     ("EK1(3) w/ g", "EK1(3) (with energy)"),
-    ("EK1(5) w/ g", "EK1(5) (with energy)"),
+    # ("EK1(5) w/ g", "EK1(5) (with energy)"),
     ("EK1(8) w/ g", "EK1(8) (with energy)"),
 ]...)
 
@@ -105,8 +103,8 @@ leg = Legend(
     [[pn_sclines[k] for k in pn_keys]..., [npn_sclines[k] for k in npn_keys]...],
     [pn_labels..., npn_labels...],
     labelsize=8,
-    tellheight=true,
-    rowgap=0,
+    # tellheight=true,
+    rowgap=2,
 )
 
 ax3.xlabel="Number of evaluations"

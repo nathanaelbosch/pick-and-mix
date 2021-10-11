@@ -31,7 +31,7 @@ function twobody2(ddu, du, u, p, t)
 end
 prob2 = SecondOrderODEProblem(twobody2, du0, u0, tspan)
 
-appxsol = solve(prob, Vern9(), abstol=1e-12, reltol=1e-12)
+# appxsol = solve(prob, Vern9(), abstol=1e-12, reltol=1e-12)
 
 
 
@@ -56,43 +56,60 @@ g2(u) = [H2(u) - H(du0, u0); L2(u) - L(du0, u0)]
 
 
 
-dt = 1//4
-sol1 = solve(prob, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=dt//3);
-sol2 = solve(prob, EK1(order=2, diffusionmodel=:fixed, manifold=g1), adaptive=false, dt=dt);
-sol3 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=dt//3);
-sol4 = solve(prob2, EK1(order=3, diffusionmodel=:fixed, manifold=g2), adaptive=false, dt=dt);
-# sol1 = solve(prob, EK1(order=2), abstol=1e-3, reltol=1e-1)
-# sol2 = solve(prob2, EK1(order=3), abstol=1e-3, reltol=1e-1,
-#              callback=ProbNumDiffEq.ManifoldUpdate(g; save_positions=(false, false)));
-# N = 100
-# samples1, times = ProbNumDiffEq.dense_sample(sol1, N)
-# samples2, times = ProbNumDiffEq.dense_sample(sol2, N)
+# dt = 1//5
+# sol1 = solve(prob, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=dt//2);
+# sol2 = solve(prob, EK1(order=2, diffusionmodel=:fixed, manifold=g1), adaptive=false, dt=dt);
+# sol3 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=dt//2);
+# sol4 = solve(prob2, EK1(order=3, diffusionmodel=:fixed, manifold=g2), adaptive=false, dt=dt);
+# # sol4 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=dt,
+# #              callback=ProbNumDiffEq.ManifoldUpdate(g2; save_positions=(false, false)));
+# # sol1 = solve(prob, EK1(order=2), abstol=1e-3, reltol=1e-1)
+# # sol2 = solve(prob2, EK1(order=3), abstol=1e-3, reltol=1e-1,
+# #              callback=ProbNumDiffEq.ManifoldUpdate(g; save_positions=(false, false)));
+# # N = 100
+# # samples1, times = ProbNumDiffEq.dense_sample(sol1, N)
+# # samples2, times = ProbNumDiffEq.dense_sample(sol2, N)
 
 
+dt = 1//12
+sol1 = solve(prob, EK1(order=1, diffusionmodel=:fixed), adaptive=false, dt=dt//2);
+sol2 = solve(prob, EK1(order=1, diffusionmodel=:fixed, manifold=g1), adaptive=false, dt=dt);
+sol3 = solve(prob2, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=dt//2);
+sol4 = solve(prob2, EK1(order=2, diffusionmodel=:fixed, manifold=g2), adaptive=false, dt=dt);
 
 
 
 
 fig = Figure(
     # resolution=(600,170)
-    resolution=(250, 220)
+    resolution=(250, 220),
+    figure_padding=5,
 )
-for i in 1:2, j in 1:2
-    fig[i, j] = Axis(fig,
-                     xgridvisible=false,
-                     ygridvisible=false,
-                     rightspinevisible=true,
-                     topspinevisible=true,
-                     leftspinevisible=true,
-                     bottomspinevisible=true,
-                     aspect = DataAspect(),
-                     xticksvisible=false,
-                     xticklabelsvisible=false,
-                     yticksvisible=false,
-                     yticklabelsvisible=false,
-                     limits=((-2.0, 0.5), (-1.0, 1.0))
-                     )
-end
+kwargs = (
+    xgridvisible=false,
+    ygridvisible=false,
+    rightspinevisible=false,
+    topspinevisible=false,
+    leftspinevisible=false,
+    bottomspinevisible=false,
+    # rightspinevisible=true,
+    # topspinevisible=true,
+    # leftspinevisible=true,
+    # bottomspinevisible=true,
+    aspect = DataAspect(),
+    xticksvisible=false,
+    xticklabelsvisible=false,
+    yticksvisible=false,
+    yticklabelsvisible=false,
+    limits=((-2.5, 0.5), (-1.2, 1.2)),
+    xlabelsize=8,
+    ylabelsize=8,
+    xaxisposition=:top,
+)
+fig[1, 1] = Axis(fig; xlabel="First-order ODE", ylabel="Conventional", kwargs...)
+fig[1, 2] = Axis(fig; xlabel="Second-order ODE", kwargs...)
+fig[2, 1] = Axis(fig; ylabel="Conserved energy", kwargs...)
+fig[2, 2] = Axis(fig; kwargs...)
 
 
 for (i, sol) in enumerate((sol1, sol2))
@@ -105,6 +122,7 @@ for (i, sol) in enumerate((sol1, sol2))
         [u[2] for u in appxsol.u],
         color=:black,
         linestyle=:dash,
+        linewidth=1,
     )
     for j in 1:N
         lines!(fig[i, 1], samples1[:, 1, j], samples1[:, 2, j],
@@ -140,6 +158,7 @@ for (i, sol) in enumerate((sol3, sol4))
         [u[2] for u in appxsol.u],
         color=:black,
         linestyle=:dash,
+        linewidth=1,
     )
     for j in 1:N
         lines!(fig[i, 2], samples2[:, 1, j], samples2[:, 2, j],
@@ -166,17 +185,17 @@ for (i, sol) in enumerate((sol3, sol4))
     scatter!(fig[i, 2], [0], [0], color=:gray, markersize=15)
 end
 noto_sans_bold = assetpath("fonts", "NotoSans-Bold.ttf")
-Label(fig[1,1][1,1,TopLeft()], "A", font=noto_sans_bold, textsize=10)
-Label(fig[1,2][1,1,TopLeft()], "B", font=noto_sans_bold, textsize=10)
-Label(fig[2,1][1,1,TopLeft()], "C", font=noto_sans_bold, textsize=10)
-Label(fig[2,2][1,1,TopLeft()], "D", font=noto_sans_bold, textsize=10)
-Label(fig[1,1][1,1,Top()], "First-order ODE", textsize=8)
-Label(fig[1,2][1,1,Top()], "Second-order ODE", textsize=8)
-Label(fig[2,1][1,1,Top()], "Physical conservation", textsize=8)
-Label(fig[2,2][1,1,Top()], "Fully informed", textsize=8)
+# Label(fig[1,1][1,1,TopLeft()], "A", font=noto_sans_bold, textsize=10)
+# Label(fig[1,2][1,1,TopLeft()], "B", font=noto_sans_bold, textsize=10)
+# Label(fig[2,1][1,1,TopLeft()], "C", font=noto_sans_bold, textsize=10)
+# Label(fig[2,2][1,1,TopLeft()], "D", font=noto_sans_bold, textsize=10)
+# Label(fig[1,1][1,1,Top()], "First-order ODE", textsize=8)
+# Label(fig[1,2][1,1,Top()], "Second-order ODE", textsize=8)
+# Label(fig[2,1][1,1,Top()], "Physical conservation", textsize=8)
+# Label(fig[2,2][1,1,Top()], "Fully informed", textsize=8)
 
-rowgap!(fig.layout, 10)
-colgap!(fig.layout, 10)
+rowgap!(fig.layout, -5)
+colgap!(fig.layout, -5)
 trim!(fig.layout)
 
 
