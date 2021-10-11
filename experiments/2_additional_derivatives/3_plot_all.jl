@@ -44,8 +44,8 @@ fig = Figure(
     resolution=(600,250),
     figure_padding = 5,
 )
-g1 = fig[1:4, 1] = GridLayout()
-g2 = fig[1:2, 2:3] = GridLayout()
+gl1 = fig[1:4, 1] = GridLayout()
+gl2 = fig[1:2, 2:3] = GridLayout()
 g3 = fig[3:4, 2:3] = GridLayout()
 gl = fig[:, 4] = GridLayout()
 
@@ -53,10 +53,10 @@ gl = fig[:, 4] = GridLayout()
 ######################################################################################
 # Left: simple plot
 ######################################################################################
-p1ax1 = Axis(g1[1,1], ylabel=L"Y^{(0)}", xticksvisible=false, xticklabelsvisible=false, xgridvisible=false, ygridvisible=false)
-p1ax2 = Axis(g1[2,1], ylabel=L"Y^{(0)} - y", xticksvisible=false, xticklabelsvisible=false, xgridvisible=false, ygridvisible=false)
-p1ax3 = Axis(g1[3,1], ylabel=L"Y^{(1)} - \dot{y}", xticksvisible=false, xticklabelsvisible=false, xgridvisible=false, ygridvisible=false)
-p1ax4 = Axis(g1[4,1], ylabel=L"Y^{(2)} - \ddot{y}", xlabel=L"t", xgridvisible=false, ygridvisible=false)
+p1ax1 = Axis(gl1[1,1], ylabel=L"Y^{(0)}", xticksvisible=false, xticklabelsvisible=false, xgridvisible=false, ygridvisible=false)
+p1ax2 = Axis(gl1[2,1], ylabel=L"Y^{(0)} - y", xticksvisible=false, xticklabelsvisible=false, xgridvisible=false, ygridvisible=false)
+p1ax3 = Axis(gl1[3,1], ylabel=L"Y^{(1)} - \dot{y}", xticksvisible=false, xticklabelsvisible=false, xgridvisible=false, ygridvisible=false)
+p1ax4 = Axis(gl1[4,1], ylabel=L"Y^{(2)} - \ddot{y}", xlabel=L"t", xgridvisible=false, ygridvisible=false)
 
 lines!(p1ax1, 0:0.1:3, true_solution.(0:0.1:3), linestyle=:dash, color=:black)
 hlines!(p1ax2, [0], linestyle=:dash, color=:black)
@@ -86,17 +86,17 @@ p1ax4.yticks = [-0.2, 0.2]
 ylims!(p1ax1, -0.2, 1.2)
 p1ax1.yticks = [0,1]
 
-rowgap!(g1, 10)
+rowgap!(gl1, 10)
 # valign = :bottom, padding = (0, 0, 5, 0))
 
 ######################################################################################
 # Top: Lotka-Volterra work-precision
 ######################################################################################
-p2ax1 = Axis(g2[1,1], xscale=log10, yscale=log10,
+p2ax1 = Axis(gl2[1,1], xscale=log10, yscale=log10,
              xlabel = "Number of evaluations",
              ylabel = "Final error",
              )
-p2ax2 = Axis(g2[1,2], xscale=log10, yscale=log10,
+p2ax2 = Axis(gl2[1,2], xscale=log10, yscale=log10,
              xlabel = "Runtime [s]",
              ylabel = "Final error",
              )
@@ -147,7 +147,7 @@ end
 p2ax2.ylabelvisible=false
 p2ax2.yticklabelsvisible=false
 linkyaxes!(p2ax1, p2ax2)
-colgap!(g2, 10)
+colgap!(gl2, 10)
 
 
 p2ax1.xticks = ([1e2, 1e3], ["10²", "10³"])
@@ -260,12 +260,12 @@ leg = Legend(
 # General tweaks
 ######################################################################################
 noto_sans_bold = assetpath("fonts", "NotoSans-Bold.ttf")
-Label(g1[1,1,TopLeft()], "A", font=noto_sans_bold, textsize=10)
-Label(g2[1,1,TopLeft()], "B", font=noto_sans_bold, textsize=10)
+Label(gl1[1,1,TopLeft()], "A", font=noto_sans_bold, textsize=10)
+Label(gl2[1,1,TopLeft()], "B", font=noto_sans_bold, textsize=10)
 Label(g3[1,1,TopLeft()], "C", font=noto_sans_bold, textsize=10)
-Label(g1[:, 1, Top()], "Logistic Equation",
+Label(gl1[:, 1, Top()], "Logistic Equation",
       padding = (0, 0, 5, 0))
-Label(g2[:, :, Top()], "Lotka-Volterra",
+Label(gl2[:, :, Top()], "Lotka-Volterra",
       padding = (0, 0, 5, 0))
 Label(g3[:, :, Top()], "Van-der-Pol",
       padding = (0, 0, 5, 0))

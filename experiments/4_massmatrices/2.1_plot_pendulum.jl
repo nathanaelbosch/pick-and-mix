@@ -7,43 +7,48 @@ DIR = @__DIR__
 
 d = load(joinpath(DIR, "pendulum_wps.jld"))
 wps_pendulum = d["wps"]
-d = load(joinpath(DIR, "rober_wps.jld"))
-wps_rober = d["wps"]
 
 
-C1, C2, C3 = ColorSchemes.Accent_3
-C1, C2, C3 = ColorSchemes.Dark2_3
+C1, C2, C3, C4 = ColorSchemes.Accent_4
+C1, C2, C3, C4 = ColorSchemes.Dark2_4
 # C1, C2, C3 = ColorSchemes.Set1_3
 # C1, C2, C3 = ColorSchemes.Set2_3
 # C1, C2, C3 = ColorSchemes.seaborn_pastel[1:3]
 LINEALPHA = 0.6
 STYLE = Dict(
-    "R23 (DAE)" => (:dtriangle, :gray),
-    "Rodas5 (DAE)" => (:utriangle, :gray),
-    "Rodas4 (DAE)" => (:rtriangle, :gray),
-    "Radau (DAE)" => (:rect, :gray),
-    "QNDF (DAE)" => (:diamond, :gray),
-    "EK1(2) (DAE)" => (:star4, C1),
-    "EK1(3) (DAE)" => (:star5, C2),
-    "EK1(5) (DAE)" => (:star8, C3),
+    "R23" => (:dtriangle, :gray),
+    "Rosenbrock23" => (:dtriangle, :gray),
+    "Rodas5" => (:utriangle, :gray),
+    "Rodas4" => (:rtriangle, :gray),
+    "Radau" => (:rect, :gray),
+    "QNDF" => (:diamond, :gray),
+    "EK1(2)" => (:star4, C1),
+    "EK1(3)" => (:star5, C2),
+    "EK1(5)" => (:star8, C3),
+    "EK1(8)" => (:star8, C4),
     "EK1(2) (ODE + cb)" => (:diamond, C1),
     "EK1(3) (ODE + cb)" => (:diamond, C2),
     "EK1(5) (ODE + cb)" => (:diamond, C3),
+    "EK1(2) (ODE + manifold)" => (:diamond, C1),
+    "EK1(3) (ODE + manifold)" => (:diamond, C2),
+    "EK1(5) (ODE + manifold)" => (:diamond, C3),
 )
 
 
 npn_keys, npn_labels = zip([
-    ("Rodas5 (DAE)", "Rodas5"),
-    ("QNDF (DAE)", "QNDF"),
+    ("Rosenbrock23", "Ros23"),
+    ("Rodas5", "Rodas5"),
+    ("QNDF", "QNDF"),
 ]...)
 
 pn_keys, pn_labels = zip([
-    ("EK1(2) (DAE)", "EK1(2)"),
-    ("EK1(3) (DAE)", "EK1(3)"),
-    ("EK1(5) (DAE)", "EK1(5)"),
-    # ("EK1(2) (ODE + cb)", "EK1(2) ODE + cb"),
-    # ("EK1(3) (ODE + cb)", "EK1(3) ODE + cb"),
-    # ("EK1(5) (ODE + cb)", "EK1(5) ODE + cb"),
+    ("EK1(2)", "EK1(2)"),
+    ("EK1(3)", "EK1(3)"),
+    ("EK1(5)", "EK1(5)"),
+    # ("EK1(8)", "EK1(8)"),
+    # ("EK1(2) (ODE + manifold)", "EK1(2) ODE + manifold"),
+    # ("EK1(3) (ODE + manifold)", "EK1(3) ODE + manifold"),
+    # ("EK1(5) (ODE + manifold)", "EK1(5) ODE + manifold"),
 ]...)
 
 
@@ -60,7 +65,7 @@ ax1.ylabel = "Final error"
 ax1.xlabel = "Number of evaluations"
 ax2.xlabel = "Runtime [s]"
 
-wps = wps_rober
+wps = wps_pendulum
 
 ######################################################################################
 npn_sclines = Dict()
@@ -131,4 +136,4 @@ colgap!(fig.layout, 10)
 trim!(fig.layout)
 
 
-save(joinpath(DIR, "dae.pdf"), fig, pt_per_unit=1)
+save(joinpath(DIR, "pendulum.pdf"), fig, pt_per_unit=1)

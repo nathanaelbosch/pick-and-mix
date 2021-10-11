@@ -57,13 +57,10 @@ g2(u) = [H2(u) - H(du0, u0); L2(u) - L(du0, u0)]
 
 
 dt = 1//4
-sol1 = solve(prob, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=dt//3)
-sol2 = solve(prob, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=dt,
-             callback=ProbNumDiffEq.ManifoldUpdate(g1; save_positions=(false, false)));
-sol3 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=dt//3)
-sol4 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=dt,
-
-             callback=ProbNumDiffEq.ManifoldUpdate(g; save_positions=(false, false)));
+sol1 = solve(prob, EK1(order=2, diffusionmodel=:fixed), adaptive=false, dt=dt//3);
+sol2 = solve(prob, EK1(order=2, diffusionmodel=:fixed, manifold=g1), adaptive=false, dt=dt);
+sol3 = solve(prob2, EK1(order=3, diffusionmodel=:fixed), adaptive=false, dt=dt//3);
+sol4 = solve(prob2, EK1(order=3, diffusionmodel=:fixed, manifold=g2), adaptive=false, dt=dt);
 # sol1 = solve(prob, EK1(order=2), abstol=1e-3, reltol=1e-1)
 # sol2 = solve(prob2, EK1(order=3), abstol=1e-3, reltol=1e-1,
 #              callback=ProbNumDiffEq.ManifoldUpdate(g; save_positions=(false, false)));

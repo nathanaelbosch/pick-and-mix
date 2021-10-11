@@ -1,6 +1,5 @@
 using DifferentialEquations
 using ProbNumDiffEq
-using Plots
 using LinearAlgebra
 using Statistics
 using DiffEqDevTools
@@ -47,16 +46,19 @@ reltols = 1.0 ./ 10.0 .^ (2:9)
 
 wps = Dict()
 wps["Rodas5"] = MyWorkPrecision(prob, Rodas5(), abstols ./ 100, reltols ./ 100; appxsol=appxsol)
-wps["Rosenbrock23"] = MyWorkPrecision(prob, Rosenbrock23(), abstols ./ 100, reltols ./ 100; appxsol=appxsol)
+wps["Rosenbrock23"] = MyWorkPrecision(prob, Rosenbrock23(), abstols, reltols; appxsol=appxsol)
 wps["RadauIIA5"] = MyWorkPrecision(prob, RadauIIA5(), abstols ./ 100, reltols ./ 100; appxsol=appxsol)
 wps["QNDF"] = MyWorkPrecision(prob, QNDF(), abstols ./ 100, reltols ./ 100; appxsol=appxsol)
-for (i, o) in enumerate((3, 5, 8))
+for (i, o) in enumerate((2, 3, 5))
     wps["EK1($o)"] = MyWorkPrecision(
         prob, EK1(order=o, smooth=false),
         abstols, reltols; appxsol=appxsol, dense=false, save_everystep=false)
-    wps["EK1($o)-index4"] = MyWorkPrecision(
-        pendulum_prob, EK1(order=o, smooth=false),
+    wps["EK0($o)"] = MyWorkPrecision(
+        prob, EK1(order=o, smooth=false),
         abstols, reltols; appxsol=appxsol, dense=false, save_everystep=false)
+    # wps["EK1($o)-index4"] = MyWorkPrecision(
+    #     pendulum_prob, EK1(order=o, smooth=false),
+    #     abstols, reltols; appxsol=appxsol, dense=false, save_everystep=false)
 end
 
 save(joinpath(DIR, "pendulum_wps.jld"), "wps", wps)

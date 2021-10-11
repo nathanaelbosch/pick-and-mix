@@ -85,8 +85,8 @@ for (_l, _prob, _appxsol) in (
             appxsol=_appxsol, dense=false, save_everystep=false
         )
         if _l == "ODE"
-            wps["EK1($o) ($_l + cb)"] = MyWorkPrecision(
-                _prob, EK1(order=o, smooth=false),
+            wps["EK1($o) ($_l + manifold)"] = MyWorkPrecision(
+                _prob, EK1(order=o, smooth=false, manifold=g),
                 abstols, reltols;
                 appxsol=_appxsol, dense=false, save_everystep=false
             )
