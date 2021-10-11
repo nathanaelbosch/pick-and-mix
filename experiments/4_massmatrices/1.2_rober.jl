@@ -64,8 +64,8 @@ for (_l, _prob, _appxsol) in (
     ("ODE", prob_ode, appxsol_ode)
     )
 
-    abstols = 1.0 ./ 10.0 .^ (4:8)
-    reltols = 1.0 ./ 10.0 .^ (1:5)
+    abstols = 1.0 ./ 10.0 .^ (5:9)
+    reltols = 1.0 ./ 10.0 .^ (2:6)
 
     wps["Rodas5 ($_l)"] = MyWorkPrecision(
         _prob, Rodas5(), abstols ./ 1e3, reltols ./ 1e3; appxsol=_appxsol)
