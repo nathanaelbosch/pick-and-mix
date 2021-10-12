@@ -105,8 +105,8 @@ npn_labels = (
     "Runge-Kutta (Vern6)",
     "R-K-Nyström (DPRKN6)",
     "Implicit R-K (RadauIIA5)",
-    "Runge-Kutta (SciPy)",
-    "LSODA (SciPy)",
+    # "Runge-Kutta (SciPy)",
+    # "LSODA (SciPy)",
 )
 npn_sclines = []
 for (j,(k,l)) in enumerate(zip(npn_keys, npn_labels))
@@ -132,29 +132,34 @@ end
 
 pn_labels =pn_keys = (
     "ODE1;o=3;EK0",
-    "ODE2;o=3;EK0",
     "ODE1;o=5;EK1",
+    "ODE2;o=3;EK0",
     "ODE2;o=5;EK1",
+)
+STYLES = Dict(
+    "ODE1;o=3;EK0" => (COLORS[4], :diamond),
+    "ODE1;o=5;EK1" => (COLORS[4], :pentagon),
+    "ODE2;o=3;EK0" => (COLORS[4], :star4),
+    "ODE2;o=5;EK1" => (COLORS[4], :star5),
 )
 pn_labels = (
     # "first-order ODE; IWP(2)",
-    "1st order  (EK0, IWP(2))",
-    "2nd order (EK0, IWP(3))",
-    "1st order  (EK1, IWP(4))",
-    "2nd order (EK1, IWP(5))",
+    "EK0(2) (1st order ODE)",
+    "EK1(4) (1st order ODE)",
+    "EK0(3) (2nd order ODE)",
+    "EK1(5) (2nd order ODE)",
 )
 pn_sclines = []
 for (j,(k,l)) in enumerate(zip(pn_keys, pn_labels))
     for (i,x) in enumerate((:nf, :time))
         wp = wps[k]
+        c, m = STYLES[k]
         scl = scatterlines!(
             fig[1,i+1],
             [r[x] for r in wp], [r[:final] for r in wp],
-            # color=(COLORS[j],0.5),
-            color=([COLORS[4], COLORS[3], COLORS[4], COLORS[3]][j], 0.5),
-            markercolor=[COLORS[4], COLORS[3], COLORS[4], COLORS[3]][j],
-            # marker=[:pentagon, :diamond, :star5, :star4][2i+j-2],
-            marker=[:diamond, :star4, :pentagon, :star5,][j],
+            color=(c, 0.5),
+            markercolor=c,
+            marker=m,
             strokewidth=0.5, linewidth=3, markersize=10,
         )
         (i == 1) && push!(pn_sclines, scl)

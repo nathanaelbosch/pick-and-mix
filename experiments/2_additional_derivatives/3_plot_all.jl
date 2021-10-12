@@ -101,7 +101,7 @@ p2ax2 = Axis(gl2[1,2], xscale=log10, yscale=log10,
              ylabel = "Final error",
              )
 
-npn_keys = ("Tsit5", "RadauIIA5", "RK45-scipy")
+npn_keys = ("Tsit5", "RadauIIA5")
 pn_labels = pn_keys = ("3", "3,3", "5", "5,3")
 
 npn_sclines = Dict()
@@ -169,7 +169,7 @@ p3ax2 = Axis(g3[1,2], xscale=log10, yscale=log10,
              )
 
 
-npn_labels = npn_keys = ("RadauIIA5", "Radau-scipy")
+npn_labels = npn_keys = ("RadauIIA5",)
 pn_labels = pn_keys = ("3", "3,3", "5", "5,3")
 
 for (i, x, ax) in ((1, :nf, p3ax1), (2,:time, p3ax2))
@@ -230,25 +230,22 @@ leg = Legend(
     gl[1,1],
     [
         pn_sclines["3"],
-        pn_sclines["3,3"],
         pn_sclines["5"],
+        pn_sclines["3,3"],
         pn_sclines["5,3"],
         npn_sclines["Tsit5"],
-        npn_sclines["RK45-scipy"],
+        # npn_sclines["RK45-scipy"],
         npn_sclines["RadauIIA5"],
-        npn_sclines["Radau-scipy"],
+        # npn_sclines["Radau-scipy"],
         # npn_sclines["LSODA-scipy"],
     ],
     [
-        "order 3, no ÿ",
-        "order 3, with ÿ",
-        "order 5, no ÿ",
-        "order 5, with ÿ",
-        "Tsit5 (Julia)",
-        "RK45 (SciPy)",
-        "RadauIIA5 (Julia)",
-        "Radau (SciPy)",
-        # "LSODA (SciPy)",
+        "EK1(3)̈",
+        "EK1(5)",
+        "EK1(3), augmented",
+        "EK1(5), augmented",
+        "Runge-Kutta (Tsit)",
+        "Implicit RK (RadauIIA5)",
     ],
     # orientation=:horizontal,
     # tellwidth=false,

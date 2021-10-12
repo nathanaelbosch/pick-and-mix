@@ -26,7 +26,7 @@ STYLE = Dict(
 )
 
 npn_keys, npn_labels = zip([
-    ("Rosenbrock23", "Ros23"),
+    ("Rosenbrock23", "Rosen-\nbrock23"),
     ("Rodas5", "Rodas5"),
     ("QNDF", "QNDF"),
 ]...)
