@@ -31,7 +31,7 @@ function twobody2(ddu, du, u, p, t)
 end
 prob2 = SecondOrderODEProblem(twobody2, du0, u0, tspan)
 
-# appxsol = solve(prob, Vern9(), abstol=1e-12, reltol=1e-12)
+appxsol = solve(prob, Vern9(), abstol=1e-12, reltol=1e-12)
 
 
 

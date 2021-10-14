@@ -139,8 +139,8 @@ pn_labels =pn_keys = (
 STYLES = Dict(
     "ODE1;o=3;EK0" => (COLORS[4], :diamond),
     "ODE1;o=5;EK1" => (COLORS[4], :pentagon),
-    "ODE2;o=3;EK0" => (COLORS[4], :star4),
-    "ODE2;o=5;EK1" => (COLORS[4], :star5),
+    "ODE2;o=3;EK0" => (COLORS[3], :star4),
+    "ODE2;o=5;EK1" => (COLORS[3], :star5),
 )
 pn_labels = (
     # "first-order ODE; IWP(2)",

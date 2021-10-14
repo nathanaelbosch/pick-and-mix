@@ -240,7 +240,7 @@ leg = Legend(
         # npn_sclines["LSODA-scipy"],
     ],
     [
-        "EK1(3)̈",
+        "EK1(3)",
         "EK1(5)",
         "EK1(3), augmented",
         "EK1(5), augmented",

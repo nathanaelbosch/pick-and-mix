@@ -1,14 +1,13 @@
 using CairoMakie
 using ColorSchemes
-using Plots: RGB
 
 
 PN_COLORS = parse.(
-    RGB, ["#107D79", "#FF9933", "#1F77B4", "#D62728", "#9467BD", "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF"]
+    RGBf, ["#107D79", "#FF9933", "#1F77B4", "#D62728", "#9467BD", "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF"]
 )
 
 # Gruvbox
-COLORS = parse.(RGB, [
+COLORS = parse.(RGBf, [
     "#a54242", # red
     "#8c9440", # green
     "#de935f", # yellow
@@ -19,7 +18,7 @@ COLORS = parse.(RGB, [
 ])
 
 # Other gruvbox: https://camo.githubusercontent.com/410b3ab80570bcd5b470a08d84f93caa5b4962ccd994ebceeb3d1f78364c2120/687474703a2f2f692e696d6775722e636f6d2f776136363678672e706e67
-GRUVBOX_DARK = parse.(RGB, [
+GRUVBOX_DARK = parse.(RGBf, [
     "#cc241d", # red
     "#98971a", # green
     "#d79921", # yellow
@@ -29,7 +28,7 @@ GRUVBOX_DARK = parse.(RGB, [
     "#d65d0e", # orange
 ])
 # Lighter colors
-GRUVBOX_LIGHT = parse.(RGB, [
+GRUVBOX_LIGHT = parse.(RGBf, [
     "#fb4934", # red
     "#b8bb26", # green
     "#fabd2f", # yellow

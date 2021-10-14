@@ -40,14 +40,15 @@ reltols = 1.0 ./ 10.0 .^ (3:8)
 
 wps = Dict()
 for o in orders
-    wps["$o"] = MyWorkPrecision(prob, EK1(order=o), abstols, reltols)
+    wps["$o"] = MyWorkPrecision(prob, EK1(order=o, smooth=false), abstols, reltols; dense=false, save_everystep=false)
     for f in fdbs
-        wps["$o,$f"] = MyWorkPrecision(prob, EK1FDB(order=o, jac_quality=f), abstols, reltols)
+        wps["$o,$f"] = MyWorkPrecision(prob, EK1FDB(order=o, smooth=false, jac_quality=f), abstols,
+                                       reltols; dense=false, save_everystep=false)
     end
 end
 
 wps["Tsit5"] = MyWorkPrecision(prob, Tsit5(), abstols ./ 100, reltols ./ 100; save_everystep=false, dense=false)
 wps["RadauIIA5"] = MyWorkPrecision(prob, RadauIIA5(), abstols ./ 100, reltols ./ 100; save_everystep=false, dense=false)
-wps["RK45-scipy"] = MyWorkPrecision(prob, SciPyDiffEq.RK45(), abstols ./ 100, reltols ./ 100; save_everystep=false, dense=false)
+# wps["RK45-scipy"] = MyWorkPrecision(prob, SciPyDiffEq.RK45(), abstols ./ 100, reltols ./ 100; save_everystep=false, dense=false)
 
 save(joinpath(DIR, "lv_wps.jld"), "wps", wps)

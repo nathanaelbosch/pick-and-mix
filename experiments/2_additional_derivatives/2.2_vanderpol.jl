@@ -19,6 +19,7 @@ DIR = @__DIR__
 using DiffEqProblemLibrary.ODEProblemLibrary: importodeproblems; importodeproblems()
 import DiffEqProblemLibrary.ODEProblemLibrary: prob_ode_lotkavoltera, prob_ode_fitzhughnagumo, prob_ode_threebody, prob_ode_vanderpol, prob_ode_vanstiff
 prob = remake(prob_ode_vanstiff, tspan=(0.0, 10.0))
+prob = ProbNumDiffEq.remake_prob_with_jac(prob)
 appxsol = solve(remake(prob, u0=big.(prob.u0)), RadauIIA5(), abstol=1e-16, reltol=1e-16, maxiters=1e6)
 
 
@@ -34,15 +35,18 @@ reltols = 1.0 ./ 10.0 .^ (3:8)
 
 wps = Dict()
 for o in orders
-    wps["$o"] = MyWorkPrecision(prob, EK1(order=o), abstols, reltols)
+    wps["$o"] = MyWorkPrecision(prob, EK1(order=o, smooth=false), abstols, reltols;
+                                dense=false, save_everystep=false)
     for f in fdbs
-        wps["$o,$f"] = MyWorkPrecision(prob, EK1FDB(order=o, jac_quality=f), abstols, reltols)
+        wps["$o,$f"] = MyWorkPrecision(
+            prob, EK1FDB(order=o, smooth=false, jac_quality=f), abstols, reltols;
+            dense=false, save_everystep=false)
     end
 end
 
 # wps["Tsit5"] = MyWorkPrecision(prob, Tsit5(), abstols, reltols; save_everystep=false, dense=false)
 wps["RadauIIA5"] = MyWorkPrecision(prob, RadauIIA5(), abstols ./ 10, reltols ./ 10; save_everystep=false, dense=false)
-wps["Radau-scipy"] = MyWorkPrecision(prob, SciPyDiffEq.Radau(), abstols ./ 10, reltols ./ 10; save_everystep=false, dense=false)
-wps["LSODA-scipy"] = MyWorkPrecision(prob, SciPyDiffEq.LSODA(), abstols ./ 10, reltols ./ 10; save_everystep=false, dense=false)
+# wps["Radau-scipy"] = MyWorkPrecision(prob, SciPyDiffEq.Radau(), abstols ./ 10, reltols ./ 10; save_everystep=false, dense=false)
+# wps["LSODA-scipy"] = MyWorkPrecision(prob, SciPyDiffEq.LSODA(), abstols ./ 10, reltols ./ 10; save_everystep=false, dense=false)
 
 save(joinpath(DIR, "vdp_wps.jld"), "wps", wps)
