@@ -39,7 +39,7 @@ pn_keys, pn_labels = zip([
 
 
 fig = Figure(
-    resolution=(300,200),
+    resolution=(300,180),
     figure_padding=5,
 )
 

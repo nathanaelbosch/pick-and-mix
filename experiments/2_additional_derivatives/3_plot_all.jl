@@ -41,7 +41,7 @@ MARKERS = Dict(
 
 
 fig = Figure(
-    resolution=(600,250),
+    resolution=(600,240),
     figure_padding = 5,
 )
 gl1 = fig[1:4, 1] = GridLayout()
@@ -268,6 +268,7 @@ Label(g3[:, :, Top()], "Van-der-Pol",
       padding = (0, 0, 5, 0))
 
 colgap!(fig.layout, 3, 15)
+rowgap!(fig.layout, 15)
 trim!(fig.layout)
 
 save(joinpath(DIR, "fdb_plot.pdf"), fig, pt_per_unit=1)
