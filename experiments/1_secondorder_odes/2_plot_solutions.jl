@@ -20,6 +20,7 @@ ODE2_o5_times = [w[:time] for w in wps["ODE2;o=5;EK1"]]
 
 ########################################################################################
 # Compute the exmple trajectory
+########################################################################################
 using OrdinaryDiffEq
 function pleiades(du, u, p, t)
     v = view(u, 1:7)   # x
@@ -51,6 +52,7 @@ appxsol = solve(remake(prob1, u0=big.(prob1.u0)), Vern9(), abstol=1e-20, reltol=
 
 ########################################################################################
 # Make the plot with Makie.jl
+########################################################################################
 fig = Figure(resolution=(600, 150), figure_padding=5)
 
 ax =

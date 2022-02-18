@@ -58,10 +58,10 @@ u0 = [x0; y0]
 du0 = [dx0; dy0]
 prob2 = SecondOrderODEProblem(pleiades2, du0, u0, tspan)
 
-######################################################################################
-# WP
-######################################################################################
 
+######################################################################################
+# Work-Precision Diagrams
+######################################################################################
 wps = Dict()
 
 abstols = 1.0 ./ 10.0 .^ (6:11)
@@ -110,16 +110,7 @@ wps["LSODA-SciPy"] = MyWorkPrecision(
     save_everystep=false,
 )
 
-# order = 3
 smooth = false
-# for o in [5,4]
-#     wps["ODE1;o=$o;EK1"] = MyWorkPrecision(
-#         prob1, EK1(order=o-1, smooth=smooth, initial_derivatives=dfs1),
-#         abstols, reltols; dense=smooth, save_everystep=false)
-#     wps["ODE2;o=$o;EK1"] = MyWorkPrecision(
-#         prob2, EK1(order=o, smooth=smooth, initial_derivatives=dfs2),
-#         abstols, reltols; dense=smooth, save_everystep=false)
-# end
 wps["ODE1;o=3;EK0"] = MyWorkPrecision(
     prob1,
     EK0(order=2, smooth=smooth),
