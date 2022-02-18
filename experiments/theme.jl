@@ -84,7 +84,7 @@ theme = Theme(
         yticklabelsize=8,
     ),
     Legend=(labelsize=9, framevisible=false, patchsize=(10, 10), padding=(0, 0, 0, 0)),
-    Scatter=(strokewidth=0.2,),
-    ScatterLines=(linewidth=3, markerstrokewidth=0.5),
+    Scatter=(strokewidth=0.5,),
+    ScatterLines=(linewidth=3, strokewidth=0.5),
 )
 set_theme!(theme)
