@@ -29,6 +29,11 @@ julia --project="." -e "include("experiments/0_kepler_samples/main.jl")
 to obtain `./experiments/0_kepler_samples/figure1.pdf`:
 <img alt="Figure 1" src="./experiments/0_kepler_samples/figure1.svg" width="50%">
 
+### Experiment 1: Second-order ODEs
+The experiment script is `./experiments/1_secondorder_odes/1_compute_solutions.jl`.
+Then, with `./experiments/1_secondorder_odes/2_plot_solutions.jl` you obtain the plot
+<img alt="Figure 2" src="./experiments/1_secondorder_odes/figure2_secondorder_workprecision.svg" width="100%">
+
 
 
 ## Reference
