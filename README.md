@@ -34,13 +34,18 @@ julia> include("myscript.jl")
 Run the script `./experiments/0_kepler_samples/main.jl`
 to obtain `./experiments/0_kepler_samples/figure1.pdf`:
 
+<p align="center">
 <img alt="Figure 1" src="./experiments/0_kepler_samples/figure1.svg" width="50%">
+</p>
 
 
 ### Case study 1: Second-order ODEs
 The experiment script is `./experiments/1_secondorder_odes/1_compute_solutions.jl`.
 Then, with `./experiments/1_secondorder_odes/2_plot_solutions.jl` you obtain the plot
+
+<p align="center">
 <img alt="Figure 2" src="./experiments/1_secondorder_odes/figure2_secondorder_workprecision.svg" width="100%">
+</p>
 
 
 ### Case study 2: Additional second-derivative information
@@ -50,7 +55,9 @@ The experimentc can be run with
 
 Then, to plot run `./experiments/2_additional_derivatives/3_plot_all.jl`
 
+<p align="center">
 <img alt="Figure 3" src="./experiments/2_additional_derivatives/figure3_additional_derivative_info.svg" width="100%">
+</p>
 
 
 ### Case study 3: Dynamical systems with conserved quantities
@@ -58,13 +65,21 @@ For figure 4, run (in order):
 - `./experiments/3_conserved_quantities/1.1_generate_workprecision_data.jl`
 - `./experiments/3_conserved_quantities/1.2_workprecision_plot.jl`
 
+<p align="center">
 <img alt="Figure 4" src="./experiments/3_conserved_quantities/figure4_conservedquantity_workprecision.svg" width="100%">
+</p>
 
 `./experiments/3_conserved_quantities/2_longtermplot.jl` to get figure 5:
+
+<p align="center">
 <img alt="Figure 5" src="./experiments/3_conserved_quantities/figure5_longtermplot.svg" width="80%">
+</p>
 
 And `./experiments/3_conserved_quantities/3_inflated_kepler_samples.jl` to get figure 6:
+
+<p align="center">
 <img alt="Figure 6" src="./experiments/3_conserved_quantities/figure6_conservedquantity_and_samples.svg" width="80%">
+</p>
 
 
 ### Case study 4: Mass-matrix DAEs
@@ -73,7 +88,9 @@ To run the experiments and make the plot, run (in order)
 - `./experiments/4_massmatrices/1.2_rober.jl`
 - `./experiments/4_massmatrices/2_plot.jl`
 
+<p align="center">
 <img alt="Figure 7" src="./experiments/4_massmatrices/figure7_massmatrix_dae.svg" width="80%">
+</p>
 
 
 ## Reference
