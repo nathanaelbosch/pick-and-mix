@@ -3,6 +3,11 @@
 This repo contains the code which was used to compute the results of the paper **"Pick-and-Mix Information Operators for Probabilistic ODE Solvers"**, accepted at AISTATS 2022.
 
 
+<p align="center">
+<img alt="Figure 1" src="./experiments/0_kepler_samples/figure1.svg" width="80%">
+</p>
+
+
 ---
 
 __To solve differential equations in Julia with probabilistic numerical solvers, have a look at our package
@@ -32,11 +37,7 @@ julia> include("myscript.jl")
 
 ### Generating figure 1
 Run the script `./experiments/0_kepler_samples/main.jl`
-to obtain `./experiments/0_kepler_samples/figure1.pdf`:
-
-<p align="center">
-<img alt="Figure 1" src="./experiments/0_kepler_samples/figure1.svg" width="50%">
-</p>
+to obtain `./experiments/0_kepler_samples/figure1.pdf` (shown above).
 
 
 ### Case study 1: Second-order ODEs
