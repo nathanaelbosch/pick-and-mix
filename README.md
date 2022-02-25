@@ -5,27 +5,33 @@ This repo contains the code which was used to compute the results of the paper *
 
 ---
 
-__To solve differential equations in Julia with probabilistic numerical solvers, please use
-[ProbNumDiffEq.jl](https://github.com/nathanaelbosch/ProbNumDiffEq.jl)!__<br />
-The code in this repository is not meant to be used as generic ODE solvers, whereas
-[ProbNumDiffEq.jl](https://github.com/nathanaelbosch/ProbNumDiffEq.jl)
-is a Julia package under active development.
-It is more stable and documented, its solvers are more efficent, and it contains more features.
-The DE solvers it provides are compatible with the
-[DifferentialEquations.jl](https://docs.sciml.ai/stable/)
-ecosystem.
+__To solve differential equations in Julia with probabilistic numerical solvers, have a look at our package
+[ProbNumDiffEq.jl](https://github.com/nathanaelbosch/ProbNumDiffEq.jl).__
+Much of the new functionality presented in this paper is already available in ProbNumDiffEq.jl and will be covered in the documentation.
 
 ---
 
-A __Python__ implementation of these solvers, as well as of additional probabilistic numerical methods, is maintained in [ProbNum](https://github.com/probabilistic-numerics/probnum).
+A __Python__ implementation of probabilistic numerical ODE solvers, as well as many other probabilistic numerical methods, is maintained in __[ProbNum](https://github.com/probabilistic-numerics/probnum)__ (`pip install probnum`).
 
+---
 
 
 ## Running the code to recreate our experiments
+First open `julia`, activate the local environment, and instantiate it to install all the packages:
+```
+julia> ]
+(v1.7) pkg> activate .
+(v1.7) pkg> instantiate
+```
+and you can quit the `pkg` environment by hitting backspace.
 
+To run a julia script from the Julia REPL, do
+```
+julia> include("myscript.jl")
+```
 
-### Figure 1
-Run the script `experiments/0_kepler_samples/main.jl`
+### Generating figure 1
+Run the script `./experiments/0_kepler_samples/main.jl`
 to obtain `./experiments/0_kepler_samples/figure1.pdf`:
 
 <img alt="Figure 1" src="./experiments/0_kepler_samples/figure1.svg" width="50%">
@@ -68,6 +74,7 @@ To run the experiments and make the plot, run (in order)
 - `./experiments/4_massmatrices/2_plot.jl`
 
 <img alt="Figure 7" src="./experiments/4_massmatrices/figure7_massmatrix_dae.svg" width="80%">
+
 
 ## Reference
 ```
