@@ -17,7 +17,6 @@ ODE2_o5_times = [w[:time] for w in wps["ODE2;o=5;EK1"]]
     ODE1_o4_times ./ ODE2_o4_times,
 ) ODE1_o5_times ./ ODE2_o5_times mean(ODE1_o5_times ./ ODE2_o5_times)
 
-
 ########################################################################################
 # Compute the exmple trajectory
 ########################################################################################
@@ -48,7 +47,6 @@ u0 = [dx0; dy0; x0; y0]
 tspan = (0.0, 3.0)
 prob1 = ODEProblem(pleiades, u0, tspan)
 appxsol = solve(remake(prob1, u0=big.(prob1.u0)), Vern9(), abstol=1e-20, reltol=1e-20)
-
 
 ########################################################################################
 # Make the plot with Makie.jl
@@ -88,7 +86,6 @@ for i in 1:7
         color=:gray,
     )
 end
-
 
 # Plot the work-precision diagrams
 npn_keys = (
@@ -163,11 +160,8 @@ for (j, (k, l)) in enumerate(zip(pn_keys, pn_labels))
 end
 
 leg =
-    fig[:, end+1] = Legend(
-        fig,
-        [pn_sclines..., npn_sclines...],
-        [pn_labels..., npn_labels...],
-    )
+    fig[:, end+1] =
+        Legend(fig, [pn_sclines..., npn_sclines...], [pn_labels..., npn_labels...])
 
 ax2.xticks = ([1e3, 1e4, 1e5], ["10³", "10⁴", "10⁵"])
 ax2.yticks = ([1e-2, 1e-6, 1e-10], ["10⁻²", "10⁻⁶", "10⁻¹⁰"])

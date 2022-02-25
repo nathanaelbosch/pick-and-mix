@@ -2,6 +2,8 @@
 Utility to create customized work-precision diagrams
 =#
 using DiffEqDevTools
+import DiffEqDevTools: appxtrue
+using Statistics
 
 function chi2(gaussian_estimate, actual_value)
     μ, Σ = gaussian_estimate
