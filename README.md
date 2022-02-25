@@ -21,7 +21,14 @@ A __Python__ implementation of these solvers, as well as of additional probabili
 
 
 ## Usage
-TODO
+### Figure 1
+Run
+```
+julia --project="." -e "include("experiments/0_kepler_samples/main.jl")
+```
+to obtain `./experiments/0_kepler_samples/figure1.pdf`:
+<img alt="Figure 1" src="./experiments/0_kepler_samples/figure1.svg" width="50%">
+
 
 
 ## Reference
