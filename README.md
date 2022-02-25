@@ -83,7 +83,7 @@ And `./experiments/3_conserved_quantities/3_inflated_kepler_samples.jl` to get f
 </p>
 
 
-### Case study 4: Mass-matrix DAEs
+### Case study 4: Mass-matrix differential-algebraic equations
 To run the experiments and make the plot, run (in order)
 - `./experiments/4_massmatrices/1.1_pendulum.jl`
 - `./experiments/4_massmatrices/1.2_rober.jl`
