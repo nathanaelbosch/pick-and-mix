@@ -1,6 +1,6 @@
 # Pick-and-Mix Information Operators for Probabilistic ODE Solvers - Code
 
-This repo contains the code which was used to compute the results of the paper **"Pick-and-Mix Information Operators for Probabilistic ODE Solvers"**.
+This repo contains the code which was used to compute the results of the paper **"Pick-and-Mix Information Operators for Probabilistic ODE Solvers"**, accepted at AISTATS 2022.
 
 
 ---
@@ -21,12 +21,13 @@ A __Python__ implementation of these solvers, as well as of additional probabili
 
 
 
-## Usage
+## Running the code to recreate our experiments
 
 
 ### Figure 1
 Run the script `experiments/0_kepler_samples/main.jl`
 to obtain `./experiments/0_kepler_samples/figure1.pdf`:
+
 <img alt="Figure 1" src="./experiments/0_kepler_samples/figure1.svg" width="50%">
 
 
@@ -70,5 +71,12 @@ To run the experiments and make the plot, run (in order)
 
 ## Reference
 ```
-TBD
+@misc{bosch2021pickandmix,
+      title={Pick-and-Mix Information Operators for Probabilistic ODE Solvers},
+      author={Nathanael Bosch and Filip Tronarp and Philipp Hennig},
+      year={2021},
+      eprint={2110.10770},
+      archivePrefix={arXiv},
+      primaryClass={stat.ML}
+}
 ```
