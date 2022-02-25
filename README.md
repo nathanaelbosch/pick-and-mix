@@ -60,6 +60,13 @@ And `./experiments/3_conserved_quantities/3_inflated_kepler_samples.jl` to get f
 <img alt="Figure 6" src="./experiments/3_conserved_quantities/figure6_conservedquantity_and_samples.svg" width="80%">
 
 
+### Case study 4: Mass-matrix DAEs
+To run the experiments and make the plot, run (in order)
+- `./experiments/4_massmatrices/1.1_pendulum.jl`
+- `./experiments/4_massmatrices/1.2_rober.jl`
+- `./experiments/4_massmatrices/2_plot.jl`
+
+<img alt="Figure 7" src="./experiments/4_massmatrices/figure7_massmatrix_dae.svg" width="80%">
 
 ## Reference
 ```
