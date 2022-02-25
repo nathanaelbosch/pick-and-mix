@@ -79,7 +79,7 @@ For figure 4, run (in order):
 And `./experiments/3_conserved_quantities/3_inflated_kepler_samples.jl` to get figure 6:
 
 <p align="center">
-<img alt="Figure 6" src="./experiments/3_conserved_quantities/figure6_conservedquantity_and_samples.svg" width="80%">
+<img alt="Figure 6" src="./experiments/3_conserved_quantities/figure6_conservedquantity_and_samples.svg" width="70%">
 </p>
 
 
@@ -90,7 +90,7 @@ To run the experiments and make the plot, run (in order)
 - `./experiments/4_massmatrices/2_plot.jl`
 
 <p align="center">
-<img alt="Figure 7" src="./experiments/4_massmatrices/figure7_massmatrix_dae.svg" width="80%">
+<img alt="Figure 7" src="./experiments/4_massmatrices/figure7_massmatrix_dae.svg" width="70%">
 </p>
 
 
