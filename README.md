@@ -45,6 +45,22 @@ Then, to plot run `./experiments/2_additional_derivatives/3_plot_all.jl`
 
 <img alt="Figure 3" src="./experiments/2_additional_derivatives/figure3_additional_derivative_info.svg" width="100%">
 
+
+### Case study 3: Dynamical systems with conserved quantities
+For figure 4, run (in order):
+- `./experiments/3_conserved_quantities/1.1_generate_workprecision_data.jl`
+- `./experiments/3_conserved_quantities/1.2_workprecision_plot.jl`
+
+<img alt="Figure 4" src="./experiments/3_conserved_quantities/figure4_conservedquantity_workprecision.svg" width="100%">
+
+`./experiments/3_conserved_quantities/2_longtermplot.jl` to get figure 5:
+<img alt="Figure 5" src="./experiments/3_conserved_quantities/figure5_longtermplot.svg" width="80%">
+
+And `./experiments/3_conserved_quantities/3_inflated_kepler_samples.jl` to get figure 6:
+<img alt="Figure 6" src="./experiments/3_conserved_quantities/figure6_conservedquantity_and_samples.svg" width="80%">
+
+
+
 ## Reference
 ```
 TBD
