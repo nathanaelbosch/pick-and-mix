@@ -34,7 +34,14 @@ The experiment script is `./experiments/1_secondorder_odes/1_compute_solutions.j
 Then, with `./experiments/1_secondorder_odes/2_plot_solutions.jl` you obtain the plot
 <img alt="Figure 2" src="./experiments/1_secondorder_odes/figure2_secondorder_workprecision.svg" width="100%">
 
+### Experiment 2: Additional second-derivative information
+The experimentc can be run with
+- `./experiments/2_additional_derivatives/2.1_lotkavolterra.jl`
+- `./experiments/2_additional_derivatives/2.2_vanderpol.jl`
 
+Then, to plot run `./experiments/2_additional_derivatives/3_plot_all.jl`
+
+<img alt="Figure 3" src="./experiments/2_additional_derivatives/figure3_additional_derivative_info.svg" width="100%">
 
 ## Reference
 ```
