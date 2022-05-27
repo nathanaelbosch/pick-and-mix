@@ -1,6 +1,6 @@
 # Pick-and-Mix Information Operators for Probabilistic ODE Solvers - Code
 
-This repo contains the code which was used to compute the results of the paper **"Pick-and-Mix Information Operators for Probabilistic ODE Solvers"**, accepted at AISTATS 2022.
+This repo contains the code which was used to compute the results of the paper [**"Pick-and-Mix Information Operators for Probabilistic ODE Solvers"**](https://proceedings.mlr.press/v151/bosch22a.html), accepted at AISTATS 2022.
 
 
 <p align="center">
