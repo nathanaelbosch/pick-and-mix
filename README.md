@@ -96,12 +96,19 @@ To run the experiments and make the plot, run (in order)
 
 ## Reference
 ```
-@misc{bosch2021pickandmix,
-      title={Pick-and-Mix Information Operators for Probabilistic ODE Solvers},
-      author={Nathanael Bosch and Filip Tronarp and Philipp Hennig},
-      year={2021},
-      eprint={2110.10770},
-      archivePrefix={arXiv},
-      primaryClass={stat.ML}
+@InProceedings{pmlr-v151-bosch22a,
+  title = 	 { Pick-and-Mix Information Operators for Probabilistic ODE Solvers },
+  author =       {Bosch, Nathanael and Tronarp, Filip and Hennig, Philipp},
+  booktitle = 	 {Proceedings of The 25th International Conference on Artificial Intelligence and Statistics},
+  pages = 	 {10015--10027},
+  year = 	 {2022},
+  editor = 	 {Camps-Valls, Gustau and Ruiz, Francisco J. R. and Valera, Isabel},
+  volume = 	 {151},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {28--30 Mar},
+  publisher =    {PMLR},
+  pdf = 	 {https://proceedings.mlr.press/v151/bosch22a/bosch22a.pdf},
+  url = 	 {https://proceedings.mlr.press/v151/bosch22a.html},
+  abstract = 	 { Probabilistic numerical solvers for ordinary differential equations compute posterior distributions over the solution of an initial value problem via Bayesian inference. In this paper, we leverage their probabilistic formulation to seamlessly include additional information as general likelihood terms. We show that second-order differential equations should be directly provided to the solver, instead of transforming the problem to first order. Additionally, by including higher-order information or physical conservation laws in the model, solutions become more accurate and more physically meaningful. Lastly, we demonstrate the utility of flexible information operators by solving differential-algebraic equations. In conclusion, the probabilistic formulation of numerical solvers offers a flexible way to incorporate various types of information, thus improving the resulting solutions. }
 }
 ```
